@@ -1,0 +1,55 @@
+@import "config";
+
+/** Common styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: $font-root;
+}
+
+body {
+    min-width: 100vw;
+    min-height: 100vh;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background-color: $background;
+    color: $onBackground;
+}
+
+#root,
+.App {
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    border: none;
+}
+
+@include media-med {
+    html {
+        font-size: $font-med;
+    }
+}
+
+@include media-large {
+    html {
+        font-size: $font-large;
+    }
+}
