@@ -1,7 +1,10 @@
+import React, { useState } from 'react';
+import { Modal } from 'react-bootstrap';
 import { DatePicker } from 'components';
-import React from 'react';
 
 export default function App() {
+    const [modalShow, setModalShow] = useState(false);
+
     return (
         <div className="App">
             <div className="container">
@@ -90,11 +93,11 @@ export default function App() {
                     <button
                         className="input-group-text justify-content-center"
                         style={ { width: '15%' } }
+                        onClick={ () => setModalShow(true) }
                     >
                         <i className="bi bi-calendar3"></i>
                     </button>
                 </div>
-                <DatePicker />
                 <button className="btn btn-primary">Calculate delivery price</button>
                 <div className="input-group">
                     <span
@@ -119,6 +122,21 @@ export default function App() {
                         <i className="bi bi-currency-euro"></i>
                     </span>
                 </div>
+
+                <Modal
+                    show={ modalShow }
+                    onHide={ () => setModalShow(false) }
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <h5>Selected: 23/01/2024 08:30</h5>
+                    </Modal.Header>
+                    <Modal.Body className="d-flex justify-content-center">
+                        <DatePicker />
+                    </Modal.Body>
+                </Modal>
             </div>
         </div>
     );

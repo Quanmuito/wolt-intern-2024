@@ -205,32 +205,30 @@ export const DatePicker = () => {
     };
 
     return (
-        <div className="DatePicker">
-            <div className="dp-container">
-                <div className="dp-head">
-                    <button onClick={ () => onChangeYear(true) }>
-                        <i className="bi bi-chevron-double-left"></i>
-                    </button>
-                    <button onClick={ () => onChangeMonth(true) }>
-                        <i className="bi bi-chevron-left"></i>
-                    </button>
-                    <div style={ { margin: '0 2rem' } }>
-                        <h4 className="text-center">{ state.display.year }</h4>
-                        <p className="text-center">{ MONTHS[state.display.month] }</p>
-                    </div>
-                    <button onClick={ () => onChangeMonth() }>
-                        <i className="bi bi-chevron-right"></i>
-                    </button>
-                    <button onClick={ () => onChangeYear() }>
-                        <i className="bi bi-chevron-double-right"></i>
-                    </button>
+        <div className="dp-container">
+            <div className="dp-head">
+                <button onClick={ () => onChangeYear(true) }>
+                    <i className="bi bi-chevron-double-left"></i>
+                </button>
+                <button onClick={ () => onChangeMonth(true) }>
+                    <i className="bi bi-chevron-left"></i>
+                </button>
+                <div style={ { margin: '0 2rem' } }>
+                    <h3 className="text-center">{ state.display.year }</h3>
+                    <h5 className="text-center">{ MONTHS[state.display.month] }</h5>
                 </div>
-                <div className="dp-body">
-                    { renderCalendar() }
-                </div>
-                <div className="dp-body">
-                    { renderClock() }
-                </div>
+                <button onClick={ () => onChangeMonth() }>
+                    <i className="bi bi-chevron-right"></i>
+                </button>
+                <button onClick={ () => onChangeYear() }>
+                    <i className="bi bi-chevron-double-right"></i>
+                </button>
+            </div>
+            <div className="dp-body">
+                { renderCalendar() }
+            </div>
+            <div className="dp-body">
+                { renderClock() }
             </div>
         </div>
     );
