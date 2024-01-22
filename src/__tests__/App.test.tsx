@@ -8,4 +8,3 @@ describe('Setup test', () => {
         expect(await screen.findByText(/hello world/i)).toBeInTheDocument();
     });
 });
-
