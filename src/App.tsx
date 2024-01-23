@@ -65,21 +65,11 @@ export default function App() {
                         <i className="bi bi-calendar3"></i>
                     </button>
                 </div>
-                <Modal
-                    show={ state.showDatePicker }
-                    onHide={ () => setState({ ...state, showDatePicker: false }) }
-                    onClose={ () => setState({ ...state, showDatePicker: false }) }
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <h3>{ state.inputs.orderTime }</h3>
-                    </Modal.Header>
-                    <Modal.Body className="d-flex justify-content-center">
-                        <DatePicker orderTime={ state.inputs.orderTime } setState={ setState } />
-                    </Modal.Body>
-                </Modal>
+                <DatePicker
+                    showDatePicker={ state.showDatePicker }
+                    orderTime={ state.inputs.orderTime }
+                    setState={ setState }
+                />
                 <button className="btn btn-primary">Calculate delivery price</button>
                 <div className="input-group">
                     <span className="input-group-text justify-content-center">

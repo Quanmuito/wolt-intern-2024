@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Modal } from 'react-bootstrap';
 import { AppState, DatePickerState, DateInfo } from 'types';
 import {
     getYearAndMonth,
@@ -15,11 +16,12 @@ import {
 } from 'utils';
 
 type DatePickerPropsType = {
+    showDatePicker: boolean,
     orderTime: string,
     setState: React.Dispatch<React.SetStateAction<AppState>>
 }
 
-export const DatePicker = ({ orderTime, setState }: DatePickerPropsType) => {
+export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPropsType) => {
     console.log('hi');
     const [datePickerState, setDatePickerState] = useState<DatePickerState>(getDatePickerState(orderTime));
 
@@ -57,7 +59,7 @@ export const DatePicker = ({ orderTime, setState }: DatePickerPropsType) => {
         setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, minute: minute } });
     };
 
-    const afterSelect = (): void => {
+    const onModalClose = () => {
         setState((prevState) => (
             {
                 ...prevState,
@@ -65,6 +67,7 @@ export const DatePicker = ({ orderTime, setState }: DatePickerPropsType) => {
                     ...prevState.inputs,
                     orderTime: getDisplayDateTimeFromDateInfo(datePickerState.selected),
                 },
+                showDatePicker: false,
             }
         ));
     };
@@ -139,31 +142,46 @@ export const DatePicker = ({ orderTime, setState }: DatePickerPropsType) => {
     };
 
     return (
-        <div className="dp-container">
-            <div className="dp-head">
-                <button onClick={ () => onChangeYear(true) }>
-                    <i className="bi bi-chevron-double-left"></i>
-                </button>
-                <button onClick={ () => onChangeMonth(true) }>
-                    <i className="bi bi-chevron-left"></i>
-                </button>
-                <div style={ { margin: '0 2rem' } }>
-                    <h3 className="text-center">{ datePickerState.display.year }</h3>
-                    <h5 className="text-center">{ MONTHS[datePickerState.display.month] }</h5>
+        <Modal
+            show={ showDatePicker }
+            onHide={ onModalClose }
+            onClose={ onModalClose }
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <h3>{ getDisplayDateTimeFromDateInfo(datePickerState.selected) }</h3>
+            </Modal.Header>
+            <Modal.Body className="d-flex justify-content-center">
+                <div className="dp-container">
+                    <div className="dp-head">
+                        <button onClick={ () => onChangeYear(true) }>
+                            <i className="bi bi-chevron-double-left"></i>
+                        </button>
+                        <button onClick={ () => onChangeMonth(true) }>
+                            <i className="bi bi-chevron-left"></i>
+                        </button>
+                        <div style={ { margin: '0 2rem' } }>
+                            <h3 className="text-center">{ datePickerState.display.year }</h3>
+                            <h5 className="text-center">{ MONTHS[datePickerState.display.month] }</h5>
+                        </div>
+                        <button onClick={ () => onChangeMonth() }>
+                            <i className="bi bi-chevron-right"></i>
+                        </button>
+                        <button onClick={ () => onChangeYear() }>
+                            <i className="bi bi-chevron-double-right"></i>
+                        </button>
+                    </div>
+                    <div className="dp-body">
+                        { renderCalendar() }
+                    </div>
+                    <div className="dp-body">
+                        { renderClock() }
+                    </div>
                 </div>
-                <button onClick={ () => onChangeMonth() }>
-                    <i className="bi bi-chevron-right"></i>
-                </button>
-                <button onClick={ () => onChangeYear() }>
-                    <i className="bi bi-chevron-double-right"></i>
-                </button>
-            </div>
-            <div className="dp-body">
-                { renderCalendar() }
-            </div>
-            <div className="dp-body">
-                { renderClock() }
-            </div>
-        </div>
+            </Modal.Body>
+        </Modal>
+
     );
 };
