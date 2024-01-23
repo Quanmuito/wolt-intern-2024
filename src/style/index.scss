@@ -43,6 +43,10 @@ button {
     border: none;
 }
 
+.input-group-text {
+    width: 25%;
+}
+
 @include media-med {
     html {
         font-size: $font-med;

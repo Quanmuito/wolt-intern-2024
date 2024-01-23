@@ -4,16 +4,12 @@ import { DatePicker } from 'components';
 
 export default function App() {
     const [modalShow, setModalShow] = useState(false);
-
     return (
         <div className="App">
             <div className="container">
                 <div className="input-group">
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        Cart value
+                    <span className="input-group-text justify-content-center">
+                        Cart value (€)
                     </span>
                     <input
                         id="cartValue"
@@ -23,19 +19,10 @@ export default function App() {
                         className="form-control"
                         aria-label="Total value of items in cart"
                     />
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        <i className="bi bi-currency-euro"></i>
-                    </span>
                 </div>
                 <div className="input-group">
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        Delivery distance
+                    <span className="input-group-text justify-content-center">
+                        Delivery distance (m)
                     </span>
                     <input
                         id="deliveryDistance"
@@ -45,18 +32,9 @@ export default function App() {
                         className="form-control"
                         aria-label="Delivery distance"
                     />
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        m
-                    </span>
                 </div>
                 <div className="input-group">
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
+                    <span className="input-group-text justify-content-center">
                         Number of item
                     </span>
                     <input
@@ -67,18 +45,9 @@ export default function App() {
                         className="form-control"
                         aria-label="Total amount of items"
                     />
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        <i className="bi bi-currency-euro"></i>
-                    </span>
                 </div>
                 <div className="input-group">
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
+                    <span className="input-group-text justify-content-center">
                         Order time
                     </span>
                     <input
@@ -92,7 +61,6 @@ export default function App() {
                     />
                     <button
                         className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
                         onClick={ () => setModalShow(true) }
                     >
                         <i className="bi bi-calendar3"></i>
@@ -100,10 +68,7 @@ export default function App() {
                 </div>
                 <button className="btn btn-primary">Calculate delivery price</button>
                 <div className="input-group">
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
+                    <span className="input-group-text justify-content-center">
                         Delivery Price
                     </span>
                     <input
@@ -115,12 +80,6 @@ export default function App() {
                         aria-label="Final price"
                         disabled={ true }
                     />
-                    <span
-                        className="input-group-text justify-content-center"
-                        style={ { width: '15%' } }
-                    >
-                        <i className="bi bi-currency-euro"></i>
-                    </span>
                 </div>
 
                 <Modal
