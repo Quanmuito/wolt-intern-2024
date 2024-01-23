@@ -1,138 +1,72 @@
-import React, { useState } from 'react';
-import { OrderTimeDetails } from 'types';
+import React, { useEffect, useState } from 'react';
+import { AppState, DatePickerState, DateInfo } from 'types';
 import {
     getYearAndMonth,
+    getCalendarDetails,
+    isToday,
+    isSelected,
+    isDisplayMonth,
     SHORT_DAYS,
     MONTHS,
     HOURS,
-    MINUTES
+    MINUTES,
+    getDatePickerState,
+    getDisplayDateTimeFromDateInfo
 } from 'utils';
 
-type State = {
-    display: OrderTimeDetails,
-    selected: OrderTimeDetails
+type DatePickerPropsType = {
+    orderTime: string,
+    setState: React.Dispatch<React.SetStateAction<AppState>>
 }
 
-export const DatePicker = () => {
-    const [state, setState] = useState<State>({
-        display: {
-            year:  new Date().getFullYear(),
-            month: 0,
-            date: 0,
-            hour: 0,
-            minute: 0,
-        },
-        selected: {
-            year:  new Date().getFullYear(),
-            month: 0,
-            date: 27,
-            hour: 8,
-            minute: 30,
-        },
-    });
+export const DatePicker = ({ orderTime, setState }: DatePickerPropsType) => {
+    console.log('hi');
+    const [datePickerState, setDatePickerState] = useState<DatePickerState>(getDatePickerState(orderTime));
 
-    const getCalendarDetails = (currentDate: OrderTimeDetails): OrderTimeDetails[] => {
-        const dateArray = [];
-
-        /**
-         * If the first day of current month is different than Sunday,
-         * add dates to the start until the last Sunday of previous month.
-         * `getDay()` return range is (0 - 6) with 0 is Sunday
-         */
-        const firstDayOfCurrentMonth = new Date(currentDate.year, currentDate.month, 1);
-        const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(state.display, true);
-        const lastDayOfPreviousMonth = new Date(yearOfPreviousMonth, previousMonth + 1, 0);
-        for (let i = 0; i < firstDayOfCurrentMonth.getDay(); i++) {
-            let dateDetail: OrderTimeDetails = {
-                year: yearOfPreviousMonth,
-                month: previousMonth,
-                date: lastDayOfPreviousMonth.getDate() - i,
-                hour: 0,
-                minute: 0,
-            };
-            dateArray.unshift(dateDetail);
-        }
-
-        /** Add dates of the current month to the array */
-        const lastDayOfCurrentMonth = new Date(currentDate.year, currentDate.month + 1, 0);
-        for (let i = 1; i <= lastDayOfCurrentMonth.getDate(); i++) {
-            let dateDetail: OrderTimeDetails = {
-                year: currentDate.year,
-                month: currentDate.month,
-                date: i,
-                hour: 0,
-                minute: 0,
-            };
-            dateArray.push(dateDetail);
-        }
-
-        /**
-         * Add dates for next month to the end until reach 42 elements (since the calendar has 7 cols * 6 rows)
-         */
-        const [yearOfNextMonth, nextMonth] = getYearAndMonth(state.display);
-        let i = 1;
-        while (dateArray.length < 42) {
-            let dateDetail: OrderTimeDetails = {
-                year: yearOfNextMonth,
-                month: nextMonth,
-                date: i,
-                hour: 0,
-                minute: 0,
-            };
-            dateArray.push(dateDetail);
-            i++;
-        }
-
-        return dateArray;
-    };
-
-    const isSelected = (date: OrderTimeDetails): boolean => {
-        return (state.selected.year === date.year) &&
-               (state.selected.month === date.month) &&
-               (state.selected.date === date.date);
-    };
-
-    const isToday = (date: OrderTimeDetails): boolean => {
-        return (new Date().getFullYear() === date.year) &&
-               (new Date().getMonth() === date.month) &&
-               (new Date().getDate() === date.date);
-    };
-
-    const isDisplayMonth = (date: OrderTimeDetails): boolean => {
-        return (state.display.year === date.year) &&
-               (state.display.month === date.month);
-    };
+    useEffect(() => setDatePickerState(getDatePickerState(orderTime)), [orderTime]);
 
     const onChangeYear = (backward: boolean = false): void => {
         if (backward) {
-            const previousYear = state.display.year - 1;
-            setState({ ...state, display: { ...state.display, year: previousYear } });
+            const previousYear = datePickerState.display.year - 1;
+            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: previousYear } });
         } else {
-            const nextYear = state.display.year + 1;
-            setState({ ...state, display: { ...state.display, year: nextYear } });
+            const nextYear = datePickerState.display.year + 1;
+            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: nextYear } });
         }
     };
 
     const onChangeMonth = (backward: boolean = false): void => {
         if (backward) {
-            const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(state.display, true);
-            setState({ ...state, display: { ...state.display, year: yearOfPreviousMonth, month: previousMonth } });
+            const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(datePickerState.display, true);
+            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: yearOfPreviousMonth, month: previousMonth } });
         } else {
-            const [yearOfNextMonth, nextMonth] = getYearAndMonth(state.display);
-            setState({ ...state, display: { ...state.display, year: yearOfNextMonth, month: nextMonth } });
+            const [yearOfNextMonth, nextMonth] = getYearAndMonth(datePickerState.display);
+            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: yearOfNextMonth, month: nextMonth } });
         }
     };
 
-    const onChangeDate = (date: OrderTimeDetails): void => {
-        setState({ ...state, selected: { ...state.selected, year: date.year, month: date.month, date: date.date } });
+    const onChangeDate = (date: DateInfo): void => {
+        setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, year: date.year, month: date.month, date: date.date } });
     };
 
     const onChangeHour = (hour: number): void => {
-        setState({ ...state, selected: { ...state.selected, hour: hour } });
+        setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, hour: hour } });
     };
 
     const onChangeMinute = (minute: number): void => {
-        setState({ ...state, selected: { ...state.selected, minute: minute } });
+        setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, minute: minute } });
+    };
+
+    const afterSelect = (): void => {
+        setState((prevState) => (
+            {
+                ...prevState,
+                inputs: {
+                    ...prevState.inputs,
+                    orderTime: getDisplayDateTimeFromDateInfo(datePickerState.selected),
+                },
+            }
+        ));
     };
 
     const renderCalendar = (): JSX.Element => {
@@ -140,16 +74,16 @@ export const DatePicker = () => {
             <h5 key={ day } className="calendar-item">{ day }</h5>
         );
 
-        let dates = getCalendarDetails(state.display).map((date) => {
+        let dates = getCalendarDetails(datePickerState.display).map((date) => {
             let today = isToday(date) ? ' highlight' : '';
-            let selected = isSelected(date) ? ' highlight-selected' : '';
+            let selected = isSelected(date, datePickerState.selected) ? ' highlight-selected' : '';
 
             return (
                 <button
                     key={ `${date.year}-${date.month}}-${date.date}` }
                     className={ `calendar-item${today + selected}` }
                     onClick={ () => onChangeDate(date) }
-                    disabled={ !isDisplayMonth(date) }
+                    disabled={ !isDisplayMonth(date, datePickerState.display) }
                 >
                     <strong>{ date.date }</strong>
                 </button>
@@ -172,7 +106,7 @@ export const DatePicker = () => {
         let hours = HOURS.map((hour) => (
             <button
                 key={ `hour-${hour}` }
-                className={ `clock-item${state.selected.hour === hour ? ' highlight-selected' : ''}` }
+                className={ `clock-item${datePickerState.selected.hour === hour ? ' highlight-selected' : ''}` }
                 onClick={ () => onChangeHour(hour) }
             >
                 <strong>{ hour }</strong>
@@ -182,7 +116,7 @@ export const DatePicker = () => {
         let minutes = MINUTES.map((minute) => (
             <button
                 key={ `minute-${minute}` }
-                className={ `clock-item${state.selected.minute === minute ? ' highlight-selected' : ''}` }
+                className={ `clock-item${datePickerState.selected.minute === minute ? ' highlight-selected' : ''}` }
                 onClick={ () => onChangeMinute(minute) }
             >
                 <strong>{ minute }</strong>
@@ -214,8 +148,8 @@ export const DatePicker = () => {
                     <i className="bi bi-chevron-left"></i>
                 </button>
                 <div style={ { margin: '0 2rem' } }>
-                    <h3 className="text-center">{ state.display.year }</h3>
-                    <h5 className="text-center">{ MONTHS[state.display.month] }</h5>
+                    <h3 className="text-center">{ datePickerState.display.year }</h3>
+                    <h5 className="text-center">{ MONTHS[datePickerState.display.month] }</h5>
                 </div>
                 <button onClick={ () => onChangeMonth() }>
                     <i className="bi bi-chevron-right"></i>

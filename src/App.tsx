@@ -1,71 +1,85 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import { DatePicker } from 'components';
+import { DatePicker, Input } from 'components';
+import { AppState } from 'types';
+import {
+    getAppState,
+    TYPE_INT,
+    TYPE_FLOAT,
+    TYPE_DATETIME
+} from 'utils';
 
 export default function App() {
-    const [modalShow, setModalShow] = useState(false);
+    const [state, setState] = useState<AppState>(getAppState());
+
     return (
         <div className="App">
             <div className="container">
                 <div className="input-group">
-                    <span className="input-group-text justify-content-center">
-                        Cart value (€)
-                    </span>
-                    <input
+                    <Input
+                        label="Cart value (€)"
                         id="cartValue"
-                        name="cartValue"
-                        data-test-id="cartValue"
-                        type="text"
-                        className="form-control"
-                        aria-label="Total value of items in cart"
+                        type={ TYPE_FLOAT }
+                        value={ state.inputs.cartValue }
+                        valid={ state.validate.cartValue }
+                        description="Value of the shopping cart in euros."
+                        setState={ setState }
                     />
                 </div>
                 <div className="input-group">
-                    <span className="input-group-text justify-content-center">
-                        Delivery distance (m)
-                    </span>
-                    <input
+                    <Input
+                        label="Delivery distance (m)"
                         id="deliveryDistance"
-                        name="deliveryDistance"
-                        data-test-id="deliveryDistance"
-                        type="text"
-                        className="form-control"
-                        aria-label="Delivery distance"
+                        type={ TYPE_INT }
+                        value={ state.inputs.deliveryDistance }
+                        valid={ state.validate.deliveryDistance }
+                        description="The distance between the store and location of customer in meters."
+                        setState={ setState }
                     />
                 </div>
                 <div className="input-group">
-                    <span className="input-group-text justify-content-center">
-                        Number of item
-                    </span>
-                    <input
+                    <Input
+                        label="Number of items"
                         id="numberOfItems"
-                        name="numberOfItems"
-                        data-test-id="numberOfItems"
-                        type="text"
-                        className="form-control"
-                        aria-label="Total amount of items"
+                        type={ TYPE_INT }
+                        value={ state.inputs.numberOfItems }
+                        valid={ state.validate.numberOfItems }
+                        description="The number of items in the customer's shopping cart."
+                        setState={ setState }
                     />
                 </div>
                 <div className="input-group">
-                    <span className="input-group-text justify-content-center">
-                        Order time
-                    </span>
-                    <input
-                        type="text"
+                    <Input
+                        label="Order time (Y-M-D h:m:s)"
                         id="orderTime"
-                        name="orderTime"
-                        data-test-id="orderTime"
-                        className="form-control"
-                        // onChange={ () => console.log(getInputValueFromDateDetails(state.selected)) }
-                        // value={ getInputValueFromDateDetails(state.selected) }
+                        type={ TYPE_DATETIME }
+                        value={ state.inputs.orderTime }
+                        valid={ state.validate.orderTime }
+                        description="The date/time when the order is being made"
+                        setState={ setState }
                     />
                     <button
                         className="input-group-text justify-content-center"
-                        onClick={ () => setModalShow(true) }
+                        onClick={ () => setState({ ...state, showDatePicker: true }) }
                     >
                         <i className="bi bi-calendar3"></i>
                     </button>
                 </div>
+                <Modal
+                    show={ state.showDatePicker }
+                    onHide={ () => setState({ ...state, showDatePicker: false }) }
+                    onClose={ () => setState({ ...state, showDatePicker: false }) }
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <h3>{ state.inputs.orderTime }</h3>
+                    </Modal.Header>
+                    <Modal.Body className="d-flex justify-content-center">
+                        <DatePicker orderTime={ state.inputs.orderTime } setState={ setState } />
+                    </Modal.Body>
+                </Modal>
                 <button className="btn btn-primary">Calculate delivery price</button>
                 <div className="input-group">
                     <span className="input-group-text justify-content-center">
@@ -81,21 +95,6 @@ export default function App() {
                         disabled={ true }
                     />
                 </div>
-
-                <Modal
-                    show={ modalShow }
-                    onHide={ () => setModalShow(false) }
-                    size="lg"
-                    aria-labelledby="contained-modal-title-vcenter"
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <h5>Selected: 23/01/2024 08:30</h5>
-                    </Modal.Header>
-                    <Modal.Body className="d-flex justify-content-center">
-                        <DatePicker />
-                    </Modal.Body>
-                </Modal>
             </div>
         </div>
     );

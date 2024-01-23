@@ -47,6 +47,10 @@ button {
     width: 25%;
 }
 
+.invalid-feedback {
+    color: $error;
+}
+
 @include media-med {
     html {
         font-size: $font-med;
