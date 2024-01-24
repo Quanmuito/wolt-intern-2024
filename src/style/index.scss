@@ -42,12 +42,45 @@ button {
     border: none;
 }
 
+main {
+    @include flex-center-column;
+    height: 100vh;
+    input {
+        height: 2.5rem;
+    }
+}
+
+.mb3 {
+    margin: 1rem 0;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    background-color: $surface;
+    color: $onSurface;
+}
+
 .input-group-text {
     width: 25%;
+    background-color: $surface;
+    color: $onSurface;
+}
+
+.form-text {
+    color: $onSurface;
 }
 
 .invalid-feedback {
     color: $error;
+}
+
+.btn {
+    width: 100%;
+    height: 3rem;
+}
+
+.btn-primary {
+    border-color: $primary;
+    background-color: $primary;
+    color: $onPrimary;
 }
 
 @include media-med {

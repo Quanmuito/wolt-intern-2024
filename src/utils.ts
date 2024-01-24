@@ -1,3 +1,5 @@
+import { AppState } from "types";
+
 export const TYPE_INT = 'integer';
 export const TYPE_FLOAT = 'float';
 export const TYPE_DATETIME = 'datetime';
@@ -16,19 +18,19 @@ const ITEM_NUMBER_SURCHARGE_INTERVAL = 0.5; // €
 const ITEM_NUMBER_FREE = 4;
 const ITEM_NUMBER_BULK = 12;
 const ITEM_NUMBER_BULK_SURCHARGE = 1.2; // €
-const RUSH_HOUR_DAY = 6;
+const RUSH_HOUR_DAY = 5;
 const RUSH_HOURS_START = 15;
 const RUSH_HOURS_END = 19;
 const RUSH_HOUR_MULTIPLIER = 1.2;
 
-const getCartValueSurcharge = (cartValue: number): number => {
+export const getCartValueSurcharge = (cartValue: number): number => {
     if (cartValue >= CART_VALUE_MINIMUM) {
         return CART_VALUE_SURCHARGE_MINIMUM;
     }
     return CART_VALUE_MINIMUM - cartValue;
 };
 
-const getDeliveryDistanceSurcharge = (deliveryDistance: number): number => {
+export const getDeliveryDistanceSurcharge = (deliveryDistance: number): number => {
     if (deliveryDistance <= DELIVERY_DISTANCE_MINIMUM) {
         return DELIVERY_DISTANCE_SURCHARGE_MINIMUM;
     }
@@ -38,7 +40,7 @@ const getDeliveryDistanceSurcharge = (deliveryDistance: number): number => {
     return DELIVERY_DISTANCE_SURCHARGE_MINIMUM + multiplier * DELIVERY_DISTANCE_SURCHARGE_INTERVAL;
 };
 
-const getItemNumberSurcharge = (numberOfItems: number): number => {
+export const getItemNumberSurcharge = (numberOfItems: number): number => {
     if (numberOfItems <= ITEM_NUMBER_FREE) {
         return ITEM_NUMBER_SURCHARGE_MINIMUM;
     }
@@ -52,7 +54,7 @@ const getItemNumberSurcharge = (numberOfItems: number): number => {
     return exceededSurcharge;
 };
 
-const isRushHour = (orderTime: string): boolean => {
+export const isRushHour = (orderTime: string): boolean => {
     let date = new Date(orderTime);
     let day = date.getDay();
     let hour = date.getHours();
@@ -92,4 +94,10 @@ export const getDeliveryFee = (
 
 export const isEmptyString = (string: string): boolean => {
     return string === '';
+};
+
+export const isStateValid = (state: AppState): boolean => {
+    return isEmptyString(state.cartValueError) &&
+           isEmptyString(state.deliveryDistanceError) &&
+           isEmptyString(state.numberOfItemsError);
 };

@@ -16,6 +16,7 @@ type InputPropsType = {
     error: string,
     description: string,
     setAppState: React.Dispatch<React.SetStateAction<AppState>>
+    autoFocus?: boolean,
 }
 
 export const Input = ({
@@ -26,6 +27,7 @@ export const Input = ({
     error,
     description,
     setAppState,
+    autoFocus = false,
 }: InputPropsType) => {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         let input = event.target.value;
@@ -54,22 +56,28 @@ export const Input = ({
     };
 
     return (
-        <div className="input-group">
-            <span className="input-group-text justify-content-center">
+        <div className="mb3">
+            <label id={ `${id}-label` } htmlFor={ id } className="input-group-text justify-content-center">
                 { label }
-            </span>
+            </label>
             <input
                 id={ id }
                 name={ id }
                 data-test-id={ id }
                 type={ `${type === TYPE_DATETIME ? 'datetime-local' : 'number'}` }
                 className={ `form-control${isEmptyString(error) ? '' : ' is-invalid'}` }
-                aria-label={ description }
                 value={ value }
                 onChange={ onChange }
+                aria-label={ label }
+                aria-labelledby={ `${id}-label` }
+                aria-describedby={ `${id}Description` }
+                aria-required={ true }
+                aria-invalid={ !isEmptyString(error) }
+                autoFocus={ autoFocus }
             />
+            <div id={ `${id}Description` } className="form-text">{ description }</div>
             <div id={ `${id}Feedback` } className="invalid-feedback text-end">
-                { `Invalid input. ${error}` }
+                { `Invalid input. Error: ${error}` }
             </div>
         </div>
     );
