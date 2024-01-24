@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/wolt-intern-2024/static/css/main.64bb034c.css",
+    "main.js": "/wolt-intern-2024/static/js/main.7c581309.js",
+    "index.html": "/wolt-intern-2024/index.html",
+    "main.64bb034c.css.map": "/wolt-intern-2024/static/css/main.64bb034c.css.map",
+    "main.7c581309.js.map": "/wolt-intern-2024/static/js/main.7c581309.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.64bb034c.css",
+    "static/js/main.7c581309.js"
+  ]
+}
