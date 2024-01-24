@@ -40,7 +40,7 @@ export const getDeliveryDistanceSurcharge = (deliveryDistance: number): number =
     return DELIVERY_DISTANCE_SURCHARGE_MINIMUM + multiplier * DELIVERY_DISTANCE_SURCHARGE_INTERVAL;
 };
 
-export const getItemNumberSurcharge = (numberOfItems: number): number => {
+export const getNumberOfItemsSurcharge = (numberOfItems: number): number => {
     if (numberOfItems <= ITEM_NUMBER_FREE) {
         return ITEM_NUMBER_SURCHARGE_MINIMUM;
     }
@@ -64,7 +64,7 @@ export const isRushHour = (orderTime: string): boolean => {
     }
 
     //  Before 3PM or after 7PM
-    if (hour < RUSH_HOURS_START || hour > RUSH_HOURS_END) {
+    if (hour < RUSH_HOURS_START || hour >= RUSH_HOURS_END) {
         return false;
     }
 
@@ -83,7 +83,7 @@ export const getDeliveryFee = (
 
     let cartValueSurcharge = getCartValueSurcharge(cartValue);
     let deliveryDistanceSurcharge = getDeliveryDistanceSurcharge(deliveryDistance);
-    let itemNumberSurcharge = getItemNumberSurcharge(numberOfItems);
+    let itemNumberSurcharge = getNumberOfItemsSurcharge(numberOfItems);
     let deliveryFee = cartValueSurcharge + deliveryDistanceSurcharge + itemNumberSurcharge;
     if (isRushHour(orderTime)) {
         deliveryFee *= RUSH_HOUR_MULTIPLIER;

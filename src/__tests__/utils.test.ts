@@ -6,11 +6,12 @@ import {
 } from 'utils';
 
 const cartValueCases = [
-    [8.9, 1.1],
     [5.0, 5.0],
-    [10.0, 0],
-    [10.1, 0.1],
-    [11.0, 0],
+    [8.9, 1.1],
+    [9.9, 0.1],
+    [10.0, 0.0],
+    [10.1, 0.0],
+    [11.0, 0.0],
 ];
 describe('Test get cart value surcharge', () => {
     test.each(cartValueCases)(
@@ -66,6 +67,7 @@ const rushHourCases: [string, boolean][] = [
     ['2024-01-26T17:30', true],
     ['2024-01-26T18:30', true],
     ['2024-01-26T19:30', false], // Fri, after rush hour
+    ['2024-01-26T20:30', false], // Fri, after rush hour
 ];
 describe('Test check rush hour', () => {
     test.each(rushHourCases)(
