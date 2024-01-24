@@ -95,21 +95,25 @@ describe('Test user event on number of items input', () => {
 
 describe('Test user event on order time input', () => {
     const orderTimeCases = [
-        ['2024-02-01T18:30'],
-        ['2025-02-01T18:30'],
-        ['2025-03-01T18:30'],
-        ['2025-03-22T18:30'],
-        ['2025-03-22T19:30'],
+        ['01/02/2024 18.30', '2024-02-01T18:30'],
+        ['01/02/2025 18.30', '2025-02-01T18:30'],
+        ['01/03/2025 18.30', '2025-03-01T18:30'],
+        ['22/03/2025 18.30', '2025-03-22T18:30'],
+        ['22/03/2025 19.30', '2025-03-22T19:30'],
     ];
     test.each(orderTimeCases)(
         'Input date sequence is %p, time sequence is %p and value should be %p',
-        async (input) => {
+        (datetime, expected) => {
             render(<App />);
-            let orderTimeInput = await screen.findByLabelText(/order time/i);
+            let orderTimeInput = screen.getByLabelText(/order time/i);
             expect(orderTimeInput).toBeInTheDocument();
 
-            userEvent.type(orderTimeInput, input);
-            expect(orderTimeInput).toHaveValue(input);
+            userEvent.clear(orderTimeInput);
+            userEvent.type(orderTimeInput, datetime);
+
+            let element = document.querySelector('input[type="datetime-local"]');
+            let value = element ? element.getAttribute('value') : '';
+            expect(value).toHaveValue(expected);
         }
     );
 });
