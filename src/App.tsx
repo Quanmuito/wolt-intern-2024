@@ -11,7 +11,7 @@ import {
 
 export default function App() {
     const [appState, setAppState] = useState<AppState>({
-        cartValue: '0.00',
+        cartValue: '0',
         cartValueError: '',
         deliveryDistance: '0',
         deliveryDistanceError: '',
