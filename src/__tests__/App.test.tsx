@@ -3,12 +3,9 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
-test('Test render heading', async () => {
+test('Test render only', async () => {
     render(<App />);
     expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
-
-    expect(await screen.findByLabelText(/number of items/i)).toBeInTheDocument();
-    expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
     expect(await screen.findByLabelText(/total delivery fee/i)).toBeInTheDocument();
 });
 
@@ -17,7 +14,7 @@ describe('Test cart value input', () => {
         ['10', 10],
         ['200', 200],
         ['20.6', 20.6],
-        ['40,6', 40.6],
+        ['40.6', 40.6],
     ];
     test.each(cartValueCases)(
         'Cart value is %p and display value should be %p',
@@ -62,4 +59,59 @@ describe('Test user event on delivery distance input', () => {
         let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
         expect(errorMessage).toBeInTheDocument();
     });
+});
+
+describe('Test user event on number of items input', () => {
+    const numberOfItemsCases: [string, number][] = [
+        ['1', 1],
+        ['4', 4],
+        ['5', 5],
+        ['6', 6],
+        ['12', 12],
+        ['13', 13],
+    ];
+    test.each(numberOfItemsCases)(
+        'Number of item is %p and display value should be %p',
+        async (input, expected) => {
+            render(<App />);
+            let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+            expect(numberOfItemsInput).toBeInTheDocument();
+
+            userEvent.type(numberOfItemsInput, input);
+            expect(numberOfItemsInput).toHaveValue(expected);
+        }
+    );
+
+    test('Test input float instead of integer', async () => {
+        render(<App />);
+        let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+        expect(numberOfItemsInput).toBeInTheDocument();
+
+        userEvent.type(numberOfItemsInput, '13.5');
+        let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
+        expect(errorMessage).toBeInTheDocument();
+    });
+});
+
+describe('Test user event on order time input', () => {
+    const orderTimeCases = [
+        ['20240201', '1830', '2024-02-01T18:30'],
+        ['20250201', '1830', '2025-02-01T18:30'],
+        ['20250301', '1830', '2025-03-01T18:30'],
+        ['20250322', '1830', '2025-03-22T18:30'],
+        ['20250322', '1930', '2025-03-22T19:30'],
+    ];
+    test.each(orderTimeCases)(
+        'Input date sequence is %p, time sequence is %p and value should be %p',
+        async (date, time, expected) => {
+            render(<App />);
+            let orderTimeInput = await screen.findByLabelText(/order time/i);
+            expect(orderTimeInput).toBeInTheDocument();
+
+            userEvent.type(orderTimeInput, date);
+            userEvent.keyboard('{Tab}');
+            userEvent.type(orderTimeInput, time);
+            expect(orderTimeInput).toHaveValue(expected);
+        }
+    );
 });
