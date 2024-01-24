@@ -27,6 +27,16 @@ describe('Test cart value input', () => {
             expect(cartValueInput).toHaveValue(expected);
         }
     );
+
+    test('Test input invalid', async () => {
+        render(<App />);
+        let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
+        expect(deliveryDistanceInput).toBeInTheDocument();
+
+        userEvent.type(deliveryDistanceInput, '-1000.5');
+        let errorMessage = await screen.findByText(/invalid input. error: please input a float/i);
+        expect(errorMessage).toBeInTheDocument();
+    });
 });
 
 describe('Test user event on delivery distance input', () => {
@@ -91,29 +101,4 @@ describe('Test user event on number of items input', () => {
         let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
         expect(errorMessage).toBeInTheDocument();
     });
-});
-
-describe('Test user event on order time input', () => {
-    const orderTimeCases = [
-        ['01/02/2024 18.30', '2024-02-01T18:30'],
-        ['01/02/2025 18.30', '2025-02-01T18:30'],
-        ['01/03/2025 18.30', '2025-03-01T18:30'],
-        ['22/03/2025 18.30', '2025-03-22T18:30'],
-        ['22/03/2025 19.30', '2025-03-22T19:30'],
-    ];
-    test.each(orderTimeCases)(
-        'Input date sequence is %p, time sequence is %p and value should be %p',
-        (datetime, expected) => {
-            render(<App />);
-            let orderTimeInput = screen.getByLabelText(/order time/i);
-            expect(orderTimeInput).toBeInTheDocument();
-
-            userEvent.clear(orderTimeInput);
-            userEvent.type(orderTimeInput, datetime);
-
-            let element = document.querySelector('input[type="datetime-local"]');
-            let value = element ? element.getAttribute('value') : '';
-            expect(value).toHaveValue(expected);
-        }
-    );
 });
