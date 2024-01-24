@@ -26,6 +26,7 @@ describe('Test cart value input', () => {
             let cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
+            userEvent.clear(cartValueInput);
             userEvent.type(cartValueInput, input);
             expect(cartValueInput).toHaveValue(expected);
         }
@@ -35,6 +36,7 @@ describe('Test cart value input', () => {
         let cartValueInput = await screen.findByLabelText(/cart value/i);
         expect(cartValueInput).toBeInTheDocument();
 
+        userEvent.clear(cartValueInput);
         userEvent.type(cartValueInput, '-10.5');
         let errorMessage = await screen.findByText(/invalid input. error: please input a float/i);
         expect(errorMessage).toBeInTheDocument();
@@ -56,6 +58,7 @@ describe('Test user event on delivery distance input', () => {
             let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
+            userEvent.clear(deliveryDistanceInput);
             userEvent.type(deliveryDistanceInput, input);
             expect(deliveryDistanceInput).toHaveValue(expected);
         }
@@ -65,6 +68,7 @@ describe('Test user event on delivery distance input', () => {
         let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
         expect(deliveryDistanceInput).toBeInTheDocument();
 
+        userEvent.clear(deliveryDistanceInput);
         userEvent.type(deliveryDistanceInput, '1000.5');
         let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
         expect(errorMessage).toBeInTheDocument();
@@ -86,6 +90,7 @@ describe('Test user event on number of items input', () => {
             let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
+            userEvent.clear(numberOfItemsInput);
             userEvent.type(numberOfItemsInput, input);
             expect(numberOfItemsInput).toHaveValue(expected);
         }
@@ -95,6 +100,7 @@ describe('Test user event on number of items input', () => {
         let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
         expect(numberOfItemsInput).toBeInTheDocument();
 
+        userEvent.clear(numberOfItemsInput);
         userEvent.type(numberOfItemsInput, '13.5');
         let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
         expect(errorMessage).toBeInTheDocument();
