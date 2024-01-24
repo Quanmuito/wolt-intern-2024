@@ -18,10 +18,6 @@ const RUSH_HOURS_START = 15;
 const RUSH_HOURS_END = 19;
 const RUSH_HOUR_MULTIPLIER = 1.2;
 
-export const validate = (): boolean => {
-    return true;
-};
-
 export const getCartValueSurcharge = (cartValue: number): number => {
     if (cartValue >= CART_VALUE_MINIMUM) {
         return CART_VALUE_SURCHARGE_MINIMUM;

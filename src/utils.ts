@@ -9,7 +9,7 @@ import {
 export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 export const SHORT_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-export const HOURS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+export const HOURS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 export const MINUTES = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
 
 export const JANUARY = 0;
@@ -25,7 +25,7 @@ export const getAppState = (): AppState => {
         cartValue: '0.0',
         deliveryDistance: '0',
         numberOfItems: '0',
-        orderTime: getDisplayDateTime(new Date()),
+        orderTime: formatDateFromDate(new Date()),
     };
 
     let validate: ValidateState = {
@@ -44,74 +44,107 @@ export const getAppState = (): AppState => {
     return appState;
 };
 
-export const getDatePickerState = (orderTime: string): DatePickerState => {
-    let date = new Date(orderTime);
-    let closetMinute = MINUTES.find((minute) => {
-        let difference = minute - date.getMinutes();
-        return difference > 0 && difference < 5;
-    });
+export const validateInput = (type: string, value: string): boolean => {
+    if (isEmptyString(value)) {
+        return true;
+    }
 
-    return {
-        display: {
-            year:  date.getFullYear(),
-            month: date.getMonth(),
-            date: date.getDate(),
-            hour: date.getHours(),
-            minute: closetMinute ?? date.getMinutes(),
-        },
-        selected: {
-            year:  date.getFullYear(),
-            month: date.getMonth(),
-            date: date.getDate(),
-            hour: date.getHours(),
-            minute: closetMinute ?? date.getMinutes(),
-        },
-    };
-};
+    switch (type) {
+        case TYPE_INT: {
+            let parsedValue = Number.parseInt(value);
+            return !/[^0-9]/.test(value) && Number.isInteger(parsedValue);
+        }
 
-export const isSelected = (date: DateInfo, selected: DateInfo): boolean => {
-    return (selected.year === date.year) &&
-           (selected.month === date.month) &&
-           (selected.date === date.date);
-};
+        case TYPE_FLOAT: {
+            let parsedValue = Number.parseFloat(value);
+            return !/[^0-9.,]/.test(value) && typeof(parsedValue) === 'number';
+        }
 
-export const isDisplayMonth = (date: DateInfo, display: DateInfo): boolean => {
-    return (display.year === date.year) &&
-           (display.month === date.month);
-};
+        case TYPE_DATETIME: {
+            let dateParts = value.split(/[\s,]+/); // Split by space or comma
+            let dateComponents = dateParts[0];
+            let timeComponents = dateParts[1];
+            console.log(dateComponents, timeComponents);
+            let dateMatchFormat = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.test(dateComponents);
+            let timeMatchFormat = /^(\d{1,2}):(\d{1,2}):(\d{1,2})$/.test(timeComponents);
+            return dateMatchFormat && timeMatchFormat;
+        }
 
-export const isToday = (date: DateInfo): boolean => {
-    return (new Date().getFullYear() === date.year) &&
-           (new Date().getMonth() === date.month) &&
-           (new Date().getDate() === date.date);
-};
-
-export const getDisplayDateTime = (date: Date): string => {
-    return `${date.toISOString().slice(0, 16).replace('T', ' ')}:00`;
-};
-
-export const getDisplayDateTimeFromDateInfo = (date: DateInfo): string => {
-    return getDisplayDateTime(new Date(date.year, date.month, date.date, date.hour, date.minute));
-};
-
-export const getYearAndMonth = (date: DateInfo, backward: boolean = false): [number, number] => {
-    if (backward) {
-        return (date.month === JANUARY) ? [date.year - 1, DECEMBER] : [date.year, date.month - 1];
-    } else {
-        return (date.month === DECEMBER) ? [date.year + 1, JANUARY] : [date.year, date.month + 1];
+        default:
+            return false;
     }
 };
 
-export const getCalendarDetails = (currentDate: DateInfo): DateInfo[] => {
+export const getDatePickerState = (orderTime: string): DatePickerState => {
+    let dateInfo = getDateInfoFromFormattedTime(orderTime);
+    let closetMinuteInterval = getClosetMinuteInterval(dateInfo.minute);
+
+    return {
+        display: { ...dateInfo, minute: closetMinuteInterval ?? dateInfo.minute },
+        selected: { ...dateInfo, minute: closetMinuteInterval ?? dateInfo.minute },
+    };
+};
+
+export const isSelected = (dateInfo: DateInfo, selected: DateInfo): boolean => {
+    return (dateInfo.year === selected.year) &&
+           (dateInfo.month === selected.month) &&
+           (dateInfo.date === selected.date);
+};
+
+export const isDisplayMonth = (dateInfo: DateInfo, display: DateInfo): boolean => {
+    return (dateInfo.year === display.year) &&
+           (dateInfo.month === display.month);
+};
+
+export const isToday = (dateInfo: DateInfo): boolean => {
+    let formattedToday = formatDateFromDate(new Date());
+    let todayInfo = getDateInfoFromFormattedTime(formattedToday);
+
+    return (dateInfo.year === todayInfo.year) &&
+           (dateInfo.month === todayInfo.month) &&
+           (dateInfo.date === todayInfo.date);
+};
+
+export const isCurrentHour = (hour: number): boolean => {
+    let formattedNow = formatDateFromDate(new Date());
+    let nowInfo = getDateInfoFromFormattedTime(formattedNow);
+    return hour === nowInfo.hour;
+};
+
+export const isCurrentMinute = (minute: number): boolean => {
+    let formattedNow = formatDateFromDate(new Date());
+    let nowInfo = getDateInfoFromFormattedTime(formattedNow);
+    let closetMinuteInterval = getClosetMinuteInterval(nowInfo.minute);
+    return minute === closetMinuteInterval;
+};
+
+export const getClosetMinuteInterval = (minute: number): number => {
+    let closetMinuteInterval = MINUTES.find((minuteInterval) => {
+        let difference = minuteInterval - minute;
+        return difference > 0 && difference < 5;
+    });
+
+    return closetMinuteInterval ?? minute;
+};
+
+export const getYearAndMonth = (dateInfo: DateInfo, backward: boolean = false): [number, number] => {
+    if (backward) {
+        return (dateInfo.month === JANUARY) ? [dateInfo.year - 1, DECEMBER] : [dateInfo.year, dateInfo.month - 1];
+    } else {
+        return (dateInfo.month === DECEMBER) ? [dateInfo.year + 1, JANUARY] : [dateInfo.year, dateInfo.month + 1];
+    }
+};
+
+export const getCalendarItems = (dateInfo: DateInfo): DateInfo[] => {
     const dateArray = [];
 
     /**
-         * If the first day of current month is different than Sunday,
-         * add dates to the start until the last Sunday of previous month.
-         * `getDay()` return range is (0 - 6) with 0 is Sunday
-         */
-    const firstDayOfCurrentMonth = new Date(currentDate.year, currentDate.month, 1);
-    const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(currentDate, true);
+     * If the first day of current month is different than Sunday,
+     * add dates to the start until the last Sunday of previous month.
+     * `getDay()` return range is (0 - 6) with 0 is Sunday
+     */
+    const firstDayOfCurrentMonth = new Date(dateInfo.year, dateInfo.month, 1);
+    const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(dateInfo, true);
     const lastDayOfPreviousMonth = new Date(yearOfPreviousMonth, previousMonth + 1, 0);
     for (let i = 0; i < firstDayOfCurrentMonth.getDay(); i++) {
         let dateDetail: DateInfo = {
@@ -125,11 +158,11 @@ export const getCalendarDetails = (currentDate: DateInfo): DateInfo[] => {
     }
 
     /** Add dates of the current month to the array */
-    const lastDayOfCurrentMonth = new Date(currentDate.year, currentDate.month + 1, 0);
+    const lastDayOfCurrentMonth = new Date(dateInfo.year, dateInfo.month + 1, 0);
     for (let i = 1; i <= lastDayOfCurrentMonth.getDate(); i++) {
         let dateDetail: DateInfo = {
-            year: currentDate.year,
-            month: currentDate.month,
+            year: dateInfo.year,
+            month: dateInfo.month,
             date: i,
             hour: 0,
             minute: 0,
@@ -138,9 +171,9 @@ export const getCalendarDetails = (currentDate: DateInfo): DateInfo[] => {
     }
 
     /**
-         * Add dates for next month to the end until reach 42 elements (since the calendar has 7 cols * 6 rows)
-         */
-    const [yearOfNextMonth, nextMonth] = getYearAndMonth(currentDate);
+     * Add dates for next month to the end until reach 42 elements (since the calendar has 7 cols * 6 rows)
+     */
+    const [yearOfNextMonth, nextMonth] = getYearAndMonth(dateInfo);
     let i = 1;
     while (dateArray.length < 42) {
         let dateDetail: DateInfo = {
@@ -161,4 +194,46 @@ export const getCalendarDetails = (currentDate: DateInfo): DateInfo[] => {
 
 export const isEmptyString = (string: string): boolean => {
     return string === '';
+};
+
+/** Make sure display time always in browser timezone */
+export const formatDateFromDate = (date: Date): string => {
+    let dateString = date.toLocaleString('en-GB', {
+        timeZone: new window.Intl.DateTimeFormat().resolvedOptions().timeZone,
+        hourCycle: 'h23',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+    return dateString;
+};
+
+export const formatDateFromDateInfo = (dateInfo: DateInfo): string => {
+    let date = formatElement(dateInfo.date);
+    let month = formatElement(dateInfo.month + 1);
+    let hour = formatElement(dateInfo.hour);
+    let min = formatElement(dateInfo.minute);
+    return `${date}/${month}/${dateInfo.year}, ${hour}:${min}:00`;
+};
+
+export const formatElement = (element: number): string => {
+    let elementString = element.toString();
+    return elementString.length === 2 ? elementString : `0${elementString}`;
+};
+
+export const getDateInfoFromFormattedTime = (formattedTime: string): DateInfo => {
+    let dateParts = formattedTime.split(/[\s,]+/); // Split by space or comma
+    let dateComponents = dateParts[0].split('/'); // Split date by slash
+    let timeComponents = dateParts[1].split(':'); // Split time by colon
+
+    return {
+        year: Number.parseInt(dateComponents[2], 10),
+        month: Number.parseInt(dateComponents[1], 10) - 1, // Months are zero-based
+        date: Number.parseInt(dateComponents[0], 10),
+        hour: Number.parseInt(timeComponents[0], 10),
+        minute: Number.parseInt(timeComponents[1], 10),
+    };
 };

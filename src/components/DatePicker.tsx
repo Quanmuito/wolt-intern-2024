@@ -2,74 +2,78 @@ import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { AppState, DatePickerState, DateInfo } from 'types';
 import {
+    getDatePickerState,
     getYearAndMonth,
-    getCalendarDetails,
+    getCalendarItems,
     isToday,
     isSelected,
     isDisplayMonth,
+    formatDateFromDateInfo,
     SHORT_DAYS,
     MONTHS,
     HOURS,
     MINUTES,
-    getDatePickerState,
-    getDisplayDateTimeFromDateInfo
+    isCurrentHour,
+    isCurrentMinute
 } from 'utils';
 
 type DatePickerPropsType = {
     showDatePicker: boolean,
     orderTime: string,
-    setState: React.Dispatch<React.SetStateAction<AppState>>
+    setAppState: React.Dispatch<React.SetStateAction<AppState>>
 }
 
-export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPropsType) => {
-    console.log('hi');
+export const DatePicker = ({ showDatePicker, orderTime, setAppState }: DatePickerPropsType) => {
     const [datePickerState, setDatePickerState] = useState<DatePickerState>(getDatePickerState(orderTime));
 
     useEffect(() => setDatePickerState(getDatePickerState(orderTime)), [orderTime]);
 
     const onChangeYear = (backward: boolean = false): void => {
+        let year = datePickerState.display.year;
+
         if (backward) {
-            const previousYear = datePickerState.display.year - 1;
-            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: previousYear } });
+            year -= 1;
         } else {
-            const nextYear = datePickerState.display.year + 1;
-            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: nextYear } });
+            year += 1;
         }
+
+        setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: year } });
     };
 
     const onChangeMonth = (backward: boolean = false): void => {
-        if (backward) {
-            const [yearOfPreviousMonth, previousMonth] = getYearAndMonth(datePickerState.display, true);
-            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: yearOfPreviousMonth, month: previousMonth } });
-        } else {
-            const [yearOfNextMonth, nextMonth] = getYearAndMonth(datePickerState.display);
-            setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: yearOfNextMonth, month: nextMonth } });
-        }
+        const [year, month] = getYearAndMonth(datePickerState.display, backward);
+        setDatePickerState({ ...datePickerState, display: { ...datePickerState.display, year: year, month: month } });
     };
 
-    const onChangeDate = (date: DateInfo): void => {
-        setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, year: date.year, month: date.month, date: date.date } });
+    const onSelectDate = (dateInfo: DateInfo): void => {
+        setDatePickerState({
+            ...datePickerState,
+            selected: {
+                ...datePickerState.selected,
+                year: dateInfo.year,
+                month: dateInfo.month,
+                date: dateInfo.date,
+            },
+        });
     };
 
-    const onChangeHour = (hour: number): void => {
+    const onSelectHour = (hour: number): void => {
         setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, hour: hour } });
     };
 
-    const onChangeMinute = (minute: number): void => {
+    const onSelectMinute = (minute: number): void => {
         setDatePickerState({ ...datePickerState, selected: { ...datePickerState.selected, minute: minute } });
     };
 
     const onModalClose = () => {
-        setState((prevState) => (
-            {
-                ...prevState,
-                inputs: {
-                    ...prevState.inputs,
-                    orderTime: getDisplayDateTimeFromDateInfo(datePickerState.selected),
-                },
-                showDatePicker: false,
-            }
-        ));
+        setAppState((prevState) => ({
+            ...prevState,
+            inputs: {
+                ...prevState.inputs,
+                orderTime: formatDateFromDateInfo(datePickerState.selected),
+            },
+            showDatePicker: false,
+        }));
     };
 
     const renderCalendar = (): JSX.Element => {
@@ -77,18 +81,18 @@ export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPr
             <h5 key={ day } className="calendar-item">{ day }</h5>
         );
 
-        let dates = getCalendarDetails(datePickerState.display).map((date) => {
-            let today = isToday(date) ? ' highlight' : '';
-            let selected = isSelected(date, datePickerState.selected) ? ' highlight-selected' : '';
+        let days = getCalendarItems(datePickerState.display).map((dateInfo) => {
+            let today = isToday(dateInfo) ? ' highlight' : '';
+            let selected = isSelected(dateInfo, datePickerState.selected) ? ' highlight-selected' : '';
 
             return (
                 <button
-                    key={ `${date.year}-${date.month}}-${date.date}` }
+                    key={ `${dateInfo.year}-${dateInfo.month}}-${dateInfo.date}` }
                     className={ `calendar-item${today + selected}` }
-                    onClick={ () => onChangeDate(date) }
-                    disabled={ !isDisplayMonth(date, datePickerState.display) }
+                    onClick={ () => onSelectDate(dateInfo) }
+                    disabled={ !isDisplayMonth(dateInfo, datePickerState.display) }
                 >
-                    <strong>{ date.date }</strong>
+                    <strong>{ dateInfo.date }</strong>
                 </button>
             );
         });
@@ -99,32 +103,42 @@ export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPr
                     { shortDays }
                 </div>
                 <div className="calendar-body">
-                    { dates }
+                    { days }
                 </div>
             </div>
         );
     };
 
     const renderClock = () => {
-        let hours = HOURS.map((hour) => (
-            <button
-                key={ `hour-${hour}` }
-                className={ `clock-item${datePickerState.selected.hour === hour ? ' highlight-selected' : ''}` }
-                onClick={ () => onChangeHour(hour) }
-            >
-                <strong>{ hour }</strong>
-            </button>
-        ));
+        let hours = HOURS.map((hour) => {
+            let current = isCurrentHour(hour) ? ' highlight' : '';
+            let selected = (datePickerState.selected.hour === hour) ? ' highlight-selected' : '';
 
-        let minutes = MINUTES.map((minute) => (
-            <button
-                key={ `minute-${minute}` }
-                className={ `clock-item${datePickerState.selected.minute === minute ? ' highlight-selected' : ''}` }
-                onClick={ () => onChangeMinute(minute) }
-            >
-                <strong>{ minute }</strong>
-            </button>
-        ));
+            return (
+                <button
+                    key={ `hour-${hour}` }
+                    className={ `clock-item${current + selected}` }
+                    onClick={ () => onSelectHour(hour) }
+                >
+                    <strong>{ hour }</strong>
+                </button>
+            );
+        });
+
+        let minutes = MINUTES.map((minute) => {
+            let current = isCurrentMinute(minute) ? ' highlight' : '';
+            let selected = (datePickerState.selected.minute === minute) ? ' highlight-selected' : '';
+
+            return (
+                <button
+                    key={ `minute-${minute}` }
+                    className={ `clock-item${current + selected}` }
+                    onClick={ () => onSelectMinute(minute) }
+                >
+                    <strong>{ minute }</strong>
+                </button>
+            );
+        });
 
         return (
             <div className="clock">
@@ -151,7 +165,7 @@ export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPr
             centered
         >
             <Modal.Header closeButton>
-                <h3>{ getDisplayDateTimeFromDateInfo(datePickerState.selected) }</h3>
+                <h3>{ formatDateFromDateInfo(datePickerState.selected) }</h3>
             </Modal.Header>
             <Modal.Body className="d-flex justify-content-center">
                 <div className="dp-container">
@@ -182,6 +196,5 @@ export const DatePicker = ({ showDatePicker, orderTime, setState }: DatePickerPr
                 </div>
             </Modal.Body>
         </Modal>
-
     );
 };
