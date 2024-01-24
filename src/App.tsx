@@ -6,12 +6,12 @@ import {
     TYPE_FLOAT,
     TYPE_DATETIME,
     getDeliveryFee,
-    isStateValid
+    isEmptyString
 } from 'utils';
 
 export default function App() {
     const [appState, setAppState] = useState<AppState>({
-        cartValue: '0.0',
+        cartValue: '0.00',
         cartValueError: '',
         deliveryDistance: '0',
         deliveryDistanceError: '',
@@ -21,25 +21,27 @@ export default function App() {
         orderTimeError: '',
     });
 
-    const [fee, setFee] = useState<number>(0);
-
-    const onCalculate = (): void => {
-        if (isStateValid(appState)) {
-            let deliveryFee = getDeliveryFee(
-                Number.parseFloat(appState.cartValue),
-                Number.parseInt(appState.deliveryDistance),
-                Number.parseInt(appState.numberOfItems),
-                appState.orderTime
-            );
-            setFee(deliveryFee);
-        }
+    const isStateValid = (): boolean => {
+        return isEmptyString(appState.cartValueError) &&
+           isEmptyString(appState.deliveryDistanceError) &&
+           isEmptyString(appState.numberOfItemsError);
     };
+
+    let deliveryFee = 0;
+    if (isStateValid()) {
+        deliveryFee = getDeliveryFee(
+            Number.parseFloat(appState.cartValue),
+            Number.parseInt(appState.deliveryDistance),
+            Number.parseInt(appState.numberOfItems),
+            appState.orderTime
+        );
+    }
 
     return (
         <div className="App">
             <main>
-                <h1 className="text-center">Delivery Fee Calculator</h1>
-                <div className="container p-4">
+                <div className="container">
+                    <h1 className="text-center">Delivery Fee Calculator</h1>
                     <Input
                         label="Cart value (€)"
                         id="cartValue"
@@ -48,10 +50,9 @@ export default function App() {
                         error={ appState.cartValueError }
                         description="Value of the shopping cart in euros."
                         setAppState={ setAppState }
-                        autoFocus
                     />
                     <Input
-                        label="Delivery distance (m)"
+                        label="Delivery distance (meters)"
                         id="deliveryDistance"
                         type={ TYPE_INT }
                         value={ appState.deliveryDistance }
@@ -69,7 +70,7 @@ export default function App() {
                         setAppState={ setAppState }
                     />
                     <Input
-                        label="Order time"
+                        label="Order time (datetime)"
                         id="orderTime"
                         type={ TYPE_DATETIME }
                         value={ appState.orderTime }
@@ -77,21 +78,15 @@ export default function App() {
                         description="The date/time when the order is being made"
                         setAppState={ setAppState }
                     />
-                    <button
-                        className="btn btn-primary"
-                        onClick={ onCalculate }
-                        aria-label="Calculate Delivery Fee"
-                    >
-                        Calculate Delivery Fee
-                    </button>
                     <Input
                         label="Total Delivery Fee (€)"
                         id="fee"
                         type={ TYPE_FLOAT }
-                        value={ fee.toFixed(2) }
+                        value={ deliveryFee.toFixed(2) }
                         error=""
                         description="Total cost of delivery in euros"
                         setAppState={ setAppState }
+                        result
                     />
                 </div>
             </main>

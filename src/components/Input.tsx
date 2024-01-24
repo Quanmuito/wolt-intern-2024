@@ -16,7 +16,7 @@ type InputPropsType = {
     error: string,
     description: string,
     setAppState: React.Dispatch<React.SetStateAction<AppState>>
-    autoFocus?: boolean,
+    result?: boolean,
 }
 
 export const Input = ({
@@ -27,7 +27,7 @@ export const Input = ({
     error,
     description,
     setAppState,
-    autoFocus = false,
+    result = false,
 }: InputPropsType) => {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         let input = event.target.value;
@@ -56,8 +56,12 @@ export const Input = ({
     };
 
     return (
-        <div className="mb3">
-            <label id={ `${id}-label` } htmlFor={ id } className="input-group-text justify-content-center">
+        <div className={ `mb3${result ? ' result-input' : ''}` }>
+            <label
+                id={ `${id}-label` }
+                htmlFor={ id }
+                className="input-group-text justify-content-center"
+            >
                 { label }
             </label>
             <input
@@ -70,14 +74,15 @@ export const Input = ({
                 onChange={ onChange }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
-                aria-describedby={ `${id}Description` }
+                aria-describedby={ `${id}Feedback` }
                 aria-required={ true }
                 aria-invalid={ !isEmptyString(error) }
-                autoFocus={ autoFocus }
             />
-            <div id={ `${id}Description` } className="form-text">{ description }</div>
-            <div id={ `${id}Feedback` } className="invalid-feedback text-end">
-                { `Invalid input. Error: ${error}` }
+            <div
+                id={ `${id}Feedback` }
+                className={ !isEmptyString(error) ? 'invalid-feedback text-end' : 'form-text' }
+            >
+                { !isEmptyString(error) ? `Invalid input. Error: ${error}` : description }
             </div>
         </div>
     );

@@ -1,27 +1,25 @@
-import { AppState } from "types";
-
 export const TYPE_INT = 'integer';
 export const TYPE_FLOAT = 'float';
 export const TYPE_DATETIME = 'datetime';
 
-const DELIVERY_FEE_MINIMUM = 0.0; // €
-const DELIVERY_FEE_MAXIMUM = 15.0; // €
-const CART_VALUE_MINIMUM = 10.0; // €
-const CART_VALUE_MAXIMUM = 200.0; // €
-const CART_VALUE_SURCHARGE_MINIMUM = 0.0; // €
+const DELIVERY_FEE_MINIMUM = 0.00; // €
+const DELIVERY_FEE_MAXIMUM = 15.00; // €
+const CART_VALUE_MINIMUM = 10.00; // €
+const CART_VALUE_MAXIMUM = 200.00; // €
+const CART_VALUE_SURCHARGE_MINIMUM = 0.00; // €
 const DELIVERY_DISTANCE_MINIMUM = 1000; // m
 const DELIVERY_DISTANCE_INTERVAL = 500; // m
-const DELIVERY_DISTANCE_SURCHARGE_MINIMUM = 2.0; // €
-const DELIVERY_DISTANCE_SURCHARGE_INTERVAL = 1.0; // €
-const ITEM_NUMBER_SURCHARGE_MINIMUM = 0.0; // €
-const ITEM_NUMBER_SURCHARGE_INTERVAL = 0.5; // €
+const DELIVERY_DISTANCE_SURCHARGE_MINIMUM = 2.00; // €
+const DELIVERY_DISTANCE_SURCHARGE_INTERVAL = 1.00; // €
+const ITEM_NUMBER_SURCHARGE_MINIMUM = 0.00; // €
+const ITEM_NUMBER_SURCHARGE_INTERVAL = 0.50; // €
 const ITEM_NUMBER_FREE = 4;
 const ITEM_NUMBER_BULK = 12;
-const ITEM_NUMBER_BULK_SURCHARGE = 1.2; // €
+const ITEM_NUMBER_BULK_SURCHARGE = 1.20; // €
 const RUSH_HOUR_DAY = 5;
 const RUSH_HOURS_START = 15;
 const RUSH_HOURS_END = 19;
-const RUSH_HOUR_MULTIPLIER = 1.2;
+const RUSH_HOUR_MULTIPLIER = 1.20;
 
 export const getCartValueSurcharge = (cartValue: number): number => {
     if (cartValue >= CART_VALUE_MINIMUM) {
@@ -77,6 +75,9 @@ export const getDeliveryFee = (
     numberOfItems: number,
     orderTime: string
 ): number => {
+    if (cartValue === 0 && deliveryDistance === 0 && numberOfItems === 0) {
+        return DELIVERY_FEE_MINIMUM;
+    }
     if (cartValue >= CART_VALUE_MAXIMUM) {
         return DELIVERY_FEE_MINIMUM;
     }
@@ -94,10 +95,4 @@ export const getDeliveryFee = (
 
 export const isEmptyString = (string: string): boolean => {
     return string === '';
-};
-
-export const isStateValid = (state: AppState): boolean => {
-    return isEmptyString(state.cartValueError) &&
-           isEmptyString(state.deliveryDistanceError) &&
-           isEmptyString(state.numberOfItemsError);
 };

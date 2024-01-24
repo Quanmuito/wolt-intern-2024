@@ -2,16 +2,17 @@ import {
     getCartValueSurcharge,
     getDeliveryDistanceSurcharge,
     getNumberOfItemsSurcharge,
-    isRushHour
+    isRushHour,
+    getDeliveryFee
 } from 'utils';
 
 const cartValueCases = [
-    [5.0, 5.0],
-    [8.9, 1.1],
-    [9.9, 0.1],
-    [10.0, 0.0],
-    [10.1, 0.0],
-    [11.0, 0.0],
+    [5.00, 5.00],
+    [8.90, 1.10],
+    [9.90, 0.10],
+    [10.00, 0.00],
+    [10.10, 0.00],
+    [11.00, 0.00],
 ];
 describe('Test get cart value surcharge', () => {
     test.each(cartValueCases)(
@@ -24,12 +25,12 @@ describe('Test get cart value surcharge', () => {
 });
 
 const deliveryDistanceCases = [
-    [900, 2.0],
-    [1000, 2.0],
-    [1001, 3.0],
-    [1499, 3.0],
-    [1500, 3.0],
-    [1501, 4.0],
+    [900, 2.00],
+    [1000, 2.00],
+    [1001, 3.00],
+    [1499, 3.00],
+    [1500, 3.00],
+    [1501, 4.00],
 ];
 describe('Test get delivery distance surcharge', () => {
     test.each(deliveryDistanceCases)(
@@ -42,11 +43,11 @@ describe('Test get delivery distance surcharge', () => {
 });
 
 const numberOfItemsCases = [
-    [4, 0.0],
-    [5, 0.5],
-    [10, 3.0],
-    [13, 5.7],
-    [14, 6.2],
+    [4, 0.00],
+    [5, 0.50],
+    [10, 3.00],
+    [13, 5.70],
+    [14, 6.20],
 ];
 describe('Test get number of items surcharge', () => {
     test.each(numberOfItemsCases)(
@@ -75,6 +76,35 @@ describe('Test check rush hour', () => {
         (timestamp, expected) => {
             let result = isRushHour(timestamp);
             expect(result).toBe(expected);
+        }
+    );
+});
+
+const deliveryFeeCases: [number, number, number, string, number][] = [
+    [0.00, 0, 0, '2024-01-25T12:30', 0.00], // Default
+    [5.00, 0, 0, '2024-01-25T12:30', 7.00],
+    [7.70, 0, 0, '2024-01-25T12:30', 4.30],
+    [10.00, 0, 0, '2024-01-25T12:30', 2.0],
+    [20.00, 0, 0, '2024-01-25T12:30', 2.0],
+    [20.00, 500, 0, '2024-01-25T12:30', 2.0],
+    [20.00, 1000, 0, '2024-01-25T12:30', 2.0],
+    [20.00, 1499, 0, '2024-01-25T12:30', 3.0],
+    [20.00, 1500, 0, '2024-01-25T12:30', 3.0],
+    [20.00, 1501, 0, '2024-01-25T12:30', 4.0],
+    [20.00, 1501, 2, '2024-01-25T12:30', 4.0],
+    [20.00, 1501, 4, '2024-01-25T12:30', 4.0],
+    [20.00, 1501, 5, '2024-01-25T12:30', 4.5],
+    [20.00, 1501, 7, '2024-01-25T12:30', 5.5],
+    [20.00, 1501, 12, '2024-01-25T12:30', 8.0],
+    [20.00, 1501, 13, '2024-01-25T12:30', 9.7],
+    [20.00, 1501, 13, '2024-01-26T17:30', 11.64],
+];
+describe('Test get delivery fee', () => {
+    test.each(deliveryFeeCases)(
+        'Inputs: cartValue %p, distance %p, items %p, date %p and fee shoulld be %p',
+        (cartValue, deliveryDistance, numberOfItems, orderTime, fee) => {
+            let result = getDeliveryFee(cartValue, deliveryDistance, numberOfItems, orderTime);
+            expect(result.toFixed(2)).toBe(fee.toFixed(2));
         }
     );
 });
