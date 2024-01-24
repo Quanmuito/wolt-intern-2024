@@ -98,6 +98,8 @@ const deliveryFeeCases: [number, number, number, string, number][] = [
     [20.00, 1501, 12, '2024-01-25T12:30', 8.0],
     [20.00, 1501, 13, '2024-01-25T12:30', 9.7],
     [20.00, 1501, 13, '2024-01-26T17:30', 11.64],
+    [20.00, 5000, 13, '2024-01-26T17:30', 15.00],
+    [200.00, 1501, 13, '2024-01-26T17:30', 0.00],
 ];
 describe('Test get delivery fee', () => {
     test.each(deliveryFeeCases)(
