@@ -1,13 +1,19 @@
 import React from 'react';
 import { AppState } from 'types';
-import { validateInput } from 'utils';
+import {
+    isEmptyString,
+    TYPE_DATETIME,
+    TYPE_INT,
+    TYPE_FLOAT
+} from 'utils';
+
 
 type InputPropsType = {
     label: string,
     id: string,
     type: string,
     value: string,
-    valid: boolean,
+    error: string,
     description: string,
     setAppState: React.Dispatch<React.SetStateAction<AppState>>
 }
@@ -17,18 +23,34 @@ export const Input = ({
     id,
     type,
     value,
-    valid,
+    error,
     description,
     setAppState,
 }: InputPropsType) => {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        let value = event.target.value;
+        let input = event.target.value;
+        let error: string = '';
 
-        setAppState((prevState) => ({
-            ...prevState,
-            inputs: { ...prevState.inputs, [id]: value },
-            validate: { ...prevState.validate, [id]: validateInput(type, value) },
-        }));
+        switch (type) {
+            case TYPE_INT: {
+                let parsedValue = Number.parseInt(input);
+                let isInteger = !/[^0-9]/.test(input) && Number.isInteger(parsedValue);
+                error = isInteger ? '' : 'Please input an integer';
+                break;
+            }
+
+            case TYPE_FLOAT: {
+                let parsedValue = Number.parseFloat(input);
+                let isFloat = !/[^0-9.,]/.test(input) && typeof(parsedValue) === 'number';
+                error = isFloat ? '' : 'Please input a float';
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        setAppState((prevState) => ({ ...prevState, [id]: input, [`${id}Error`]: error }));
     };
 
     return (
@@ -40,14 +62,14 @@ export const Input = ({
                 id={ id }
                 name={ id }
                 data-test-id={ id }
-                type="text"
-                className={ `form-control${valid ? '' : ' is-invalid'}` }
+                type={ `${type === TYPE_DATETIME ? 'datetime-local' : 'number'}` }
+                className={ `form-control${isEmptyString(error) ? '' : ' is-invalid'}` }
                 aria-label={ description }
                 value={ value }
                 onChange={ onChange }
             />
             <div id={ `${id}Feedback` } className="invalid-feedback text-end">
-                { `Invalid input. ${label} should be ${type}` }
+                { `Invalid input. ${error}` }
             </div>
         </div>
     );

@@ -1,15 +1,32 @@
 import React, { useState } from 'react';
-import { DatePicker, Input } from 'components';
+import { Input } from 'components';
 import { AppState } from 'types';
 import {
-    getAppState,
     TYPE_INT,
     TYPE_FLOAT,
-    TYPE_DATETIME
+    TYPE_DATETIME,
+    getDeliveryFee
 } from 'utils';
 
+
 export default function App() {
-    const [appState, setAppState] = useState<AppState>(getAppState());
+    const [appState, setAppState] = useState<AppState>({
+        cartValue: '0',
+        cartValueError: '',
+        deliveryDistance: '0',
+        deliveryDistanceError: '',
+        numberOfItems: '0',
+        numberOfItemsError: '',
+        orderTime: new Date().toISOString().slice(0, 16),
+        orderTimeError: '',
+    });
+
+    const deliveryFee = getDeliveryFee(
+        Number.parseFloat(appState.cartValue),
+        Number.parseInt(appState.deliveryDistance),
+        Number.parseInt(appState.numberOfItems),
+        appState.orderTime
+    );
 
     return (
         <div className="App">
@@ -18,8 +35,8 @@ export default function App() {
                     label="Cart value (€)"
                     id="cartValue"
                     type={ TYPE_FLOAT }
-                    value={ appState.inputs.cartValue }
-                    valid={ appState.validate.cartValue }
+                    value={ appState.cartValue }
+                    error={ appState.cartValueError }
                     description="Value of the shopping cart in euros."
                     setAppState={ setAppState }
                 />
@@ -28,8 +45,8 @@ export default function App() {
                     label="Delivery distance (m)"
                     id="deliveryDistance"
                     type={ TYPE_INT }
-                    value={ appState.inputs.deliveryDistance }
-                    valid={ appState.validate.deliveryDistance }
+                    value={ appState.deliveryDistance }
+                    error={ appState.deliveryDistanceError }
                     description="The distance between the store and location of customer in meters."
                     setAppState={ setAppState }
                 />
@@ -38,8 +55,8 @@ export default function App() {
                     label="Number of items"
                     id="numberOfItems"
                     type={ TYPE_INT }
-                    value={ appState.inputs.numberOfItems }
-                    valid={ appState.validate.numberOfItems }
+                    value={ appState.numberOfItems }
+                    error={ appState.numberOfItemsError }
                     description="The number of items in the customer's shopping cart."
                     setAppState={ setAppState }
                 />
@@ -48,45 +65,21 @@ export default function App() {
                     label="Order time"
                     id="orderTime"
                     type={ TYPE_DATETIME }
-                    value={ appState.inputs.orderTime }
-                    valid={ appState.validate.orderTime }
+                    value={ appState.orderTime }
+                    error=""
                     description="The date/time when the order is being made"
                     setAppState={ setAppState }
                 />
-                <button
-                    className="input-group-text justify-content-center"
-                    style={ { width: '100%' } }
-                    onClick={ () => setAppState({ ...appState, showDatePicker: true }) }
-                >
-                    <i className="bi bi-calendar3"></i>
-                </button>
-                <DatePicker
-                    showDatePicker={ appState.showDatePicker }
-                    orderTime={ appState.inputs.orderTime }
+                <br />
+                <Input
+                    label="Total Delivery Fee"
+                    id="fee"
+                    type={ TYPE_FLOAT }
+                    value={ deliveryFee.toFixed(2) }
+                    error=""
+                    description="This show much the delivery will cost"
                     setAppState={ setAppState }
                 />
-                <br />
-                <button
-                    className="btn btn-primary"
-                    style={ { width: '100%' } }
-                >
-                    Calculate delivery price
-                </button>
-                <br />
-                <div className="input-group">
-                    <span className="input-group-text justify-content-center">
-                        Delivery Price
-                    </span>
-                    <input
-                        id="fee"
-                        name="fee"
-                        data-test-id="fee"
-                        type="text"
-                        className="form-control"
-                        aria-label="Final price"
-                        disabled={ true }
-                    />
-                </div>
             </div>
         </div>
     );
