@@ -3,9 +3,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
-test('Test render only', async () => {
+beforeEach(() => {
     render(<App />);
+});
+
+test('Test render only', async () => {
     expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
+    expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
     expect(await screen.findByLabelText(/total delivery fee/i)).toBeInTheDocument();
 });
 
@@ -19,7 +23,6 @@ describe('Test cart value input', () => {
     test.each(cartValueCases)(
         'Cart value is %p and display value should be %p',
         async (input, expected) => {
-            render(<App />);
             let cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
@@ -29,11 +32,10 @@ describe('Test cart value input', () => {
     );
 
     test('Test input invalid', async () => {
-        render(<App />);
-        let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
-        expect(deliveryDistanceInput).toBeInTheDocument();
+        let cartValueInput = await screen.findByLabelText(/cart value/i);
+        expect(cartValueInput).toBeInTheDocument();
 
-        userEvent.type(deliveryDistanceInput, '-1000.5');
+        userEvent.type(cartValueInput, '-10.5');
         let errorMessage = await screen.findByText(/invalid input. error: please input a float/i);
         expect(errorMessage).toBeInTheDocument();
     });
@@ -51,7 +53,6 @@ describe('Test user event on delivery distance input', () => {
     test.each(deliveryDistanceCases)(
         'Delivery distance is %p and display value should be %p',
         async (input, expected) => {
-            render(<App />);
             let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
@@ -61,7 +62,6 @@ describe('Test user event on delivery distance input', () => {
     );
 
     test('Test input float instead of integer', async () => {
-        render(<App />);
         let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
         expect(deliveryDistanceInput).toBeInTheDocument();
 
@@ -83,7 +83,6 @@ describe('Test user event on number of items input', () => {
     test.each(numberOfItemsCases)(
         'Number of item is %p and display value should be %p',
         async (input, expected) => {
-            render(<App />);
             let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
@@ -93,7 +92,6 @@ describe('Test user event on number of items input', () => {
     );
 
     test('Test input float instead of integer', async () => {
-        render(<App />);
         let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
         expect(numberOfItemsInput).toBeInTheDocument();
 

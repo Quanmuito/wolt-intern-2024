@@ -31,7 +31,7 @@ export const Input = ({
 }: InputPropsType) => {
     const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         let input = event.target.value;
-        let error: string = '';
+        let error = '';
 
         switch (type) {
             case TYPE_INT: {
@@ -55,6 +55,7 @@ export const Input = ({
         setAppState((prevState) => ({ ...prevState, [id]: input, [`${id}Error`]: error }));
     };
 
+    const isValid = isEmptyString(error);
     return (
         <div className={ `mb3${result ? ' result-input' : ''}` }>
             <label
@@ -69,20 +70,20 @@ export const Input = ({
                 name={ id }
                 data-test-id={ id }
                 type={ `${type === TYPE_DATETIME ? 'datetime-local' : 'number'}` }
-                className={ `form-control${isEmptyString(error) ? '' : ' is-invalid'}` }
+                className={ `form-control${isValid ? '' : ' is-invalid'}` }
                 value={ value }
                 onChange={ onChange }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
                 aria-describedby={ `${id}Feedback` }
                 aria-required={ true }
-                aria-invalid={ !isEmptyString(error) }
+                aria-invalid={ !isValid }
             />
             <div
                 id={ `${id}Feedback` }
-                className={ !isEmptyString(error) ? 'invalid-feedback text-end' : 'form-text' }
+                className={ !isValid ? 'invalid-feedback text-end' : 'form-text' }
             >
-                { !isEmptyString(error) ? `Invalid input. Error: ${error}` : description }
+                <span>{ !isValid ? `Invalid input. Error: ${error}` : description }</span>
             </div>
         </div>
     );

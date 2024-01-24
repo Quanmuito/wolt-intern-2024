@@ -23,6 +23,7 @@ describe('Test get cart value surcharge', () => {
         }
     );
 });
+
 describe('Test get delivery distance surcharge', () => {
     const deliveryDistanceCases = [
         [900, 2.00],

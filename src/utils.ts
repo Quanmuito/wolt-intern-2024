@@ -75,7 +75,7 @@ export const getDeliveryFee = (
     numberOfItems: number,
     orderTime: string
 ): number => {
-    if (cartValue === 0 && deliveryDistance === 0 && numberOfItems === 0) {
+    if (isZero(cartValue) && isZero(deliveryDistance) && isZero(numberOfItems)) {
         return DELIVERY_FEE_MINIMUM;
     }
     if (cartValue >= CART_VALUE_MAXIMUM) {
@@ -95,4 +95,8 @@ export const getDeliveryFee = (
 
 export const isEmptyString = (string: string): boolean => {
     return string === '';
+};
+
+export const isZero = (number: number): boolean => {
+    return number === 0;
 };

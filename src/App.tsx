@@ -23,8 +23,8 @@ export default function App() {
 
     const isStateValid = (): boolean => {
         return isEmptyString(appState.cartValueError) &&
-           isEmptyString(appState.deliveryDistanceError) &&
-           isEmptyString(appState.numberOfItemsError);
+               isEmptyString(appState.deliveryDistanceError) &&
+               isEmptyString(appState.numberOfItemsError);
     };
 
     let deliveryFee = 0;
@@ -74,7 +74,7 @@ export default function App() {
                         id="orderTime"
                         type={ TYPE_DATETIME }
                         value={ appState.orderTime }
-                        error=""
+                        error={ appState.orderTimeError }
                         description="The date/time when the order is being made"
                         setAppState={ setAppState }
                     />
