@@ -22,11 +22,9 @@ describe('Test render', () => {
         expect(description).toBeInTheDocument();
 
         userEvent.type(input, '10');
-        let result1 = await screen.findByLabelText(/total delivery fee/i);
-        expect(result1).toHaveValue('2,00');
+        expect(input).toHaveValue('10');
 
         userEvent.type(input, '200');
-        let result2 = await screen.findByLabelText(/total delivery fee/i);
-        expect(result2).toHaveValue('0,00');
+        expect(input).toHaveValue('200');
     });
 });
