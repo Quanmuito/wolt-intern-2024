@@ -1,4 +1,4 @@
-export type AppState = {
+export type InputFields = {
     cartValue: number,
     deliveryDistance: number,
     numberOfItems: number,
@@ -6,7 +6,7 @@ export type AppState = {
 }
 
 export type InputDetails = {
-    id: keyof AppState,
+    id: keyof InputFields,
     label: string,
     type: string,
     description: string,

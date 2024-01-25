@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from 'components';
 import { getDeliveryFee } from 'calculator';
-import { AppState, InputDetails } from 'types';
+import { InputFields, InputDetails } from 'types';
 import {
     TYPE_DATETIME,
     TYPE_NUMBER,
@@ -38,30 +38,11 @@ const INPUT_DETAILS: InputDetails[] = [
     },
 ];
 
-const initialState: AppState = {
-    cartValue: 0,
-    deliveryDistance: 0,
-    numberOfItems: 0,
-    orderTime: new Date().toISOString().slice(0, 16),
-};
-
 export default function App() {
-    const { register, handleSubmit, setError, formState: { errors } } = useForm<AppState>();
-    const [appState, setAppState] = useState<AppState>(initialState);
+    const { register, handleSubmit, setError, formState: { errors } } = useForm<InputFields>();
+    const [fee, setFee] = useState<number>(0);
 
-    const getResult = (): number => {
-        if (isZero(appState.cartValue) && isZero(appState.numberOfItems)) {
-            return 0;
-        }
-        return getDeliveryFee(
-            appState.cartValue,
-            appState.deliveryDistance,
-            appState.numberOfItems,
-            appState.orderTime
-        );
-    };
-
-    const onSubmit: SubmitHandler<AppState> = (data) => {
+    const onSubmit: SubmitHandler<InputFields> = (data) => {
         if (isNaN(data.cartValue)) {
             setError('cartValue', {
                 type: 'manual',
@@ -94,7 +75,11 @@ export default function App() {
             return;
         }
 
-        setAppState({ ...data });
+        if (isZero(data.cartValue) && isZero(data.numberOfItems)) {
+            setFee(0);
+        } else {
+            setFee(getDeliveryFee(data.cartValue, data.deliveryDistance, data.numberOfItems, data.orderTime));
+        }
     };
 
     return (
@@ -122,7 +107,7 @@ export default function App() {
                         </button>
                         <div className={ style.result }>
                             <h3>Total delivery fee (€)</h3>
-                            <h3 data-test-id="fee">{ getResult().toFixed(2) }</h3>
+                            <h3 data-test-id="fee">{ fee.toFixed(2) }</h3>
                         </div>
                     </form>
                 </div>

@@ -1,17 +1,17 @@
 import React from 'react';
 import { UseFormRegister, RegisterOptions } from 'react-hook-form';
-import { AppState } from 'types';
+import { InputFields } from 'types';
 import { isEmptyString } from 'utils';
 import style from 'style/style.module.css';
 
 type InputPropsType = {
-    id: keyof AppState,
+    id: keyof InputFields,
     label: string,
     type: string,
     description: string,
     errorMessage: string
     datetime: boolean,
-    register:  UseFormRegister<AppState>
+    register:  UseFormRegister<InputFields>
 }
 
 export const Input = ({
@@ -23,7 +23,7 @@ export const Input = ({
     datetime = false,
     register,
 }: InputPropsType) => {
-    const options: RegisterOptions<AppState, keyof AppState> = {
+    const options: RegisterOptions<InputFields, keyof InputFields> = {
         required: true,
     };
 
