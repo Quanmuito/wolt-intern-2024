@@ -9,6 +9,7 @@ import {
     TYPE_TEXT,
     isZero
 } from 'utils';
+import style from 'style/style.module.css';
 
 const INPUT_DETAILS: InputDetails[] = [
     {
@@ -98,25 +99,34 @@ export default function App() {
 
     return (
         <div className="App">
-            <h1>Delivery Fee Calculator</h1>
-            <form onSubmit={ handleSubmit(onSubmit) }>
-                {
-                    INPUT_DETAILS.map(({ id, label, type, description }) => (
-                        <Input
-                            key={ id }
-                            id={ id }
-                            label={ label }
-                            type={ type }
-                            description={ description }
-                            register={ register }
-                            errorMessage={ errors[id]?.message ?? '' }
-                            datetime={ type === TYPE_DATETIME }
-                        />
-                    ))
-                }
-                <button type="submit">Calculate price</button>
-                <div data-test-id="fee">Total delivery fee: { getResult().toFixed(2) }</div>
-            </form>
+            <main className={ style.main }>
+                <div className={ style.container }>
+                    <h1 className={ style.title }>Delivery Fee Calculator</h1>
+                    <form className={ style.form } onSubmit={ handleSubmit(onSubmit) }>
+                        {
+                            INPUT_DETAILS.map(({ id, label, type, description }) => (
+                                <Input
+                                    key={ id }
+                                    id={ id }
+                                    label={ label }
+                                    type={ type }
+                                    description={ description }
+                                    register={ register }
+                                    errorMessage={ errors[id]?.message ?? '' }
+                                    datetime={ type === TYPE_DATETIME }
+                                />
+                            ))
+                        }
+                        <button className={ style.submit } type="submit">
+                            <h3>Calculate delivery price</h3>
+                        </button>
+                        <div className={ style.result }>
+                            <h3>Total delivery fee (€)</h3>
+                            <h3 data-test-id="fee">{ getResult().toFixed(2) }</h3>
+                        </div>
+                    </form>
+                </div>
+            </main>
         </div>
     );
 }

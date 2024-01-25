@@ -5,7 +5,6 @@
     "homepage": "/wolt-intern-2024",
     "dependencies": {
         "formik": "^2.4.5",
-        "node-sass": "^9.0.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hook-form": "^7.49.3",

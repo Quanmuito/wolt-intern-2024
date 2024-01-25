@@ -1,0 +1,140 @@
+@value primary: rgb(0, 157, 224);
+@value border: rgba(32, 33, 37, 0.12);
+@value text: rgb(0, 0, 0);
+.main {
+    width: 100vw;
+    height: 100vh;
+    font-family: Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    min-width: 70vw;
+    min-height: 95vh;
+    border: 2px solid border;
+    border-radius: 2rem;
+    margin: 2rem;
+    padding: 2rem 6rem;
+    box-shadow: rgba(32, 33, 37, 0.06) 0px 0px 54px 0px;
+}
+
+.title {
+    border: 2px solid border;
+    border-radius: 2rem;
+    padding: 1rem;
+    text-align: center;
+    color: color-textPrimary;
+    background-color: primary;
+    box-shadow: rgba(32, 33, 37, 0.06) 0px 0px 54px 0px;
+}
+
+.form {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: start;
+}
+
+.inputGroup {
+    width: 100%;
+    border: 1px solid #000;
+    border-radius: 1rem;
+    padding: 1rem;
+    background-color: border;
+}
+
+.inputLabel {
+    width: 40%;
+    margin: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 1rem;
+    padding: 0.5rem;
+    line-height: 1.5;
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: center;
+    display: block;
+    background-color: #fff;
+}
+
+.input {
+    display: block;
+    width: 100%;
+    margin: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: text;
+    appearance: none;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #000;
+    border-radius: 0.375rem;
+}
+
+.inputFeedback {
+    margin: 0.5rem;
+}
+
+.invalid {
+    margin: 0.5rem;
+    color: red;
+}
+
+.submit {
+    width: 100%;
+    border: 1px solid border;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    font-size: 1.17rem;
+    font-weight: 800;
+    line-height: 2rem;
+    background-color: primary;
+    box-shadow: 0 0 8px 0 rgba(32, 33, 37, .12);
+    text-align: center;
+}
+
+.result {
+    width: 100%;
+    border: 1px solid border;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    background-color: primary;
+    box-shadow: 0 0 8px 0 rgba(32, 33, 37, .12);
+    text-align: center;
+}
+
+@media screen and (max-width: 1600px) {
+    .inputLabel {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .inputLabel {
+        width: 80%;
+    }
+    .container {
+        padding: 4rem;
+    }
+}
+
+@media screen and (max-width: 780px) {
+    .inputLabel {
+        width: 100%;
+    }
+    .container {
+        padding: 2rem;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .container {
+        padding: 0.5rem;
+    }
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { UseFormRegister, RegisterOptions } from 'react-hook-form';
 import { AppState } from 'types';
 import { isEmptyString } from 'utils';
+import style from 'style/style.module.css';
 
 type InputPropsType = {
     id: keyof AppState,
@@ -35,10 +36,11 @@ export const Input = ({
     const isValid = isEmptyString(errorMessage);
 
     return (
-        <div>
+        <div className={ style.inputGroup }>
             <label
                 id={ `${id}-label` }
                 htmlFor={ id }
+                className={ style.inputLabel }
             >
                 { label }
             </label>
@@ -47,6 +49,7 @@ export const Input = ({
                 data-test-id={ id }
                 type={ type }
                 defaultValue={ datetime ? new Date().toISOString().slice(0, 16) : '' }
+                className={ style.input }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
                 aria-describedby={ `${id}Feedback` }
@@ -54,7 +57,7 @@ export const Input = ({
                 aria-invalid={ !isValid }
                 { ...register(id) }
             />
-            <div id={ `${id}Feedback` }>
+            <div id={ `${id}Feedback` } className={ isValid ? style.inputFeedback : style.invalid }>
                 <span>{ isValid ? description : `Invalid input. Error: ${errorMessage}` }</span>
             </div>
         </div>
