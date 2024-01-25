@@ -1,17 +1,15 @@
 import React from 'react';
-import { UseFormRegister, RegisterOptions } from 'react-hook-form';
-import { InputFields } from 'types';
+import { FieldValues } from 'react-hook-form';
 import { isEmptyString } from 'utils';
 import style from 'style/style.module.css';
 
 type InputPropsType = {
-    id: keyof InputFields,
+    id: string,
     label: string,
     type: string,
     description: string,
     errorMessage: string
-    datetime: boolean,
-    register:  UseFormRegister<InputFields>
+    options: FieldValues,
 }
 
 export const Input = ({
@@ -19,20 +17,9 @@ export const Input = ({
     id,
     type,
     description,
-    errorMessage = '',
-    datetime = false,
-    register,
+    errorMessage,
+    options,
 }: InputPropsType) => {
-    const options: RegisterOptions<InputFields, keyof InputFields> = {
-        required: true,
-    };
-
-    if (datetime) {
-        options.valueAsDate = true;
-    } else {
-        options.valueAsNumber = true;
-    }
-
     const isValid = isEmptyString(errorMessage);
 
     return (
@@ -48,14 +35,14 @@ export const Input = ({
                 id={ id }
                 data-test-id={ id }
                 type={ type }
-                defaultValue={ datetime ? new Date().toISOString().slice(0, 16) : '' }
                 className={ style.input }
+                required={ true }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
                 aria-describedby={ `${id}Feedback` }
                 aria-required={ true }
                 aria-invalid={ !isValid }
-                { ...register(id) }
+                { ...options }
             />
             <div id={ `${id}Feedback` } className={ isValid ? style.inputFeedback : style.invalid }>
                 <span>{ isValid ? description : `Invalid input. Error: ${errorMessage}` }</span>
