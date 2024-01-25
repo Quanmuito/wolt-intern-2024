@@ -1,89 +1,81 @@
 import React from 'react';
-import { AppState } from 'types';
-import {
-    isEmptyString,
-    TYPE_DATETIME,
-    TYPE_INT,
-    TYPE_FLOAT
-} from 'utils';
-
+import { UseFormRegister, RegisterOptions } from 'react-hook-form';
+import { FormFields } from 'types';
+import { isEmptyString } from 'utils';
 
 type InputPropsType = {
     label: string,
-    id: string,
+    id: keyof FormFields,
     type: string,
-    value: string,
-    error: string,
     description: string,
-    setAppState: React.Dispatch<React.SetStateAction<AppState>>
-    result?: boolean,
+    errorMessage?: string
+    readOnly?: boolean,
+    value?: string,
+    datetime?: boolean,
+    register?:  UseFormRegister<FormFields>
 }
 
 export const Input = ({
     label,
     id,
     type,
-    value,
-    error,
     description,
-    setAppState,
-    result = false,
+    errorMessage = '',
+    readOnly = false,
+    value = '',
+    datetime = false,
+    register,
 }: InputPropsType) => {
-    const onChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        let input = event.target.value;
-        let error = '';
-
-        switch (type) {
-            case TYPE_INT: {
-                let parsedValue = Number.parseInt(input);
-                let isInteger = !/[^0-9]/.test(input) && Number.isInteger(parsedValue);
-                error = isInteger ? '' : 'Please input an integer';
-                break;
-            }
-
-            case TYPE_FLOAT: {
-                let parsedValue = Number.parseFloat(input);
-                let isFloat = !/[^0-9.,]/.test(input) && typeof(parsedValue) === 'number';
-                error = isFloat ? '' : 'Please input a float';
-                break;
-            }
-
-            default:
-                break;
-        }
-
-        setAppState((prevState) => ({ ...prevState, [id]: input, [`${id}Error`]: error }));
+    const options: RegisterOptions<FormFields, keyof FormFields> = {
+        required: true,
     };
 
-    const isValid = isEmptyString(error);
+    if (datetime) {
+        options.valueAsDate = true;
+    } else {
+        options.valueAsNumber = true;
+    }
+
+    const getAttribute = () => {
+        if (!readOnly && register !== undefined) {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            now.setMilliseconds(0);
+            now.setSeconds(0);
+            const defaultValue = datetime ? now.toISOString().slice(0, -1) : '';
+
+            return {
+                defaultValue: defaultValue,
+                ...register(id, options),
+            };
+        }
+
+        return {
+            readOnly: true,
+            value: value,
+        };
+    };
+
     return (
-        <div className={ `mb3${result ? ' result-input' : ''}` }>
+        <div>
             <label
                 id={ `${id}-label` }
                 htmlFor={ id }
-                className="input-group-text justify-content-center"
             >
                 { label }
             </label>
             <input
                 id={ id }
-                name={ id }
                 data-test-id={ id }
-                type={ `${type === TYPE_DATETIME ? 'datetime-local' : 'number'}` }
-                className={ `form-control${isValid ? '' : ' is-invalid'}` }
-                value={ value }
-                onChange={ onChange }
+                type={ type }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
                 aria-describedby={ `${id}Feedback` }
-                aria-required={ true }
-                aria-invalid={ !isValid }
+                aria-required={ false }
+                { ...getAttribute() }
             />
-            <div
-                id={ `${id}Feedback` }
-                className={ !isValid ? 'invalid-feedback text-end' : 'form-text' }
-            >
-                <span>{ !isValid ? `Invalid input. Error: ${error}` : description }</span>
+            <div id={ `${id}Feedback` }>
+                <span>{ isEmptyString(errorMessage) ? description : `Invalid input. Error: ${errorMessage}` }</span>
             </div>
         </div>
     );

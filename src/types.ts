@@ -1,11 +1,21 @@
 export type AppState = {
-    cartValue: string,
-    cartValueError: string,
-    deliveryDistance: string,
-    deliveryDistanceError: string,
-    numberOfItems: string,
-    numberOfItemsError: string,
+    cartValue: number,
+    deliveryDistance: number,
+    numberOfItems: number,
     orderTime: string,
-    orderTimeError: string,
-    [index: string]: string
+}
+
+export type FormFields = {
+    cartValue: number,
+    deliveryDistance: number,
+    numberOfItems: number,
+    orderTime: string,
+    fee: string,
+}
+
+export type InputDetails = {
+    id: keyof FormFields,
+    label: string,
+    type: string,
+    description: string,
 }

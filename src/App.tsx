@@ -1,93 +1,103 @@
 import React, { useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { Input } from 'components';
-import { AppState } from 'types';
+import { getDeliveryFee } from 'calculator';
+import { AppState, FormFields, InputDetails } from 'types';
 import {
+    TYPE_DATETIME,
     TYPE_INT,
     TYPE_FLOAT,
-    TYPE_DATETIME,
-    getDeliveryFee,
-    isEmptyString
+    isZero
 } from 'utils';
 
+const INPUT_DETAILS: InputDetails[] = [
+    {
+        id: 'cartValue',
+        label: 'Cart value (€)',
+        type: TYPE_FLOAT,
+        description: 'Value of the shopping cart in euros.',
+    },
+    {
+        id: 'deliveryDistance',
+        label: 'Delivery distance (meters)',
+        type: TYPE_INT,
+        description: 'The distance between the store and location of customer in meters.',
+    },
+    {
+        id: 'numberOfItems',
+        label: 'Number of items',
+        type: TYPE_INT,
+        description: 'The number of items in the shopping cart of customer.',
+    },
+    {
+        id: 'orderTime',
+        label: 'Order time (datetime)',
+        type: TYPE_DATETIME,
+        description: 'The date/time when the order is being made',
+    },
+];
+
 export default function App() {
+    const { register, handleSubmit, setError, formState: { errors } } = useForm<FormFields>();
     const [appState, setAppState] = useState<AppState>({
-        cartValue: '0',
-        cartValueError: '',
-        deliveryDistance: '0',
-        deliveryDistanceError: '',
-        numberOfItems: '0',
-        numberOfItemsError: '',
+        cartValue: 0,
+        deliveryDistance: 0,
+        numberOfItems: 0,
         orderTime: new Date().toISOString().slice(0, 16),
-        orderTimeError: '',
     });
 
-    const isStateValid = (): boolean => {
-        return isEmptyString(appState.cartValueError) &&
-               isEmptyString(appState.deliveryDistanceError) &&
-               isEmptyString(appState.numberOfItemsError);
+    const getResult = (): number => {
+        if (isZero(appState.cartValue) && isZero(appState.numberOfItems)) {
+            return 0;
+        }
+        return getDeliveryFee(appState);
     };
 
-    let deliveryFee = 0;
-    if (isStateValid()) {
-        deliveryFee = getDeliveryFee(
-            Number.parseFloat(appState.cartValue),
-            Number.parseInt(appState.deliveryDistance),
-            Number.parseInt(appState.numberOfItems),
-            appState.orderTime
+    const onSubmit: SubmitHandler<FormFields> = (data) => {
+        if (isNaN(data.cartValue)) {
+            setError('cartValue', {
+                type: 'manual',
+                message: 'Cart value should be a number.',
+            });
+        } else {
+            setAppState({ ...data });
+        }
+    };
+
+    const renderInput = (inputDetails: InputDetails): JSX.Element => {
+        return (
+            <Input
+                key={ inputDetails.id }
+                label={ inputDetails.label }
+                id={ inputDetails.id }
+                type={ inputDetails.type }
+                description={ inputDetails.description }
+                register={ register }
+                errorMessage={ errors[inputDetails.id]?.message ?? '' }
+                { ...(inputDetails.type === TYPE_DATETIME) ? { datetime: true } : {} }
+            />
         );
-    }
+    };
 
     return (
         <div className="App">
             <main>
-                <div className="container">
-                    <h1 className="text-center">Delivery Fee Calculator</h1>
-                    <Input
-                        label="Cart value (€)"
-                        id="cartValue"
-                        type={ TYPE_FLOAT }
-                        value={ appState.cartValue }
-                        error={ appState.cartValueError }
-                        description="Value of the shopping cart in euros."
-                        setAppState={ setAppState }
-                    />
-                    <Input
-                        label="Delivery distance (meters)"
-                        id="deliveryDistance"
-                        type={ TYPE_INT }
-                        value={ appState.deliveryDistance }
-                        error={ appState.deliveryDistanceError }
-                        description="The distance between the store and location of customer in meters."
-                        setAppState={ setAppState }
-                    />
-                    <Input
-                        label="Number of items"
-                        id="numberOfItems"
-                        type={ TYPE_INT }
-                        value={ appState.numberOfItems }
-                        error={ appState.numberOfItemsError }
-                        description="The number of items in the customer's shopping cart."
-                        setAppState={ setAppState }
-                    />
-                    <Input
-                        label="Order time (datetime)"
-                        id="orderTime"
-                        type={ TYPE_DATETIME }
-                        value={ appState.orderTime }
-                        error={ appState.orderTimeError }
-                        description="The date/time when the order is being made"
-                        setAppState={ setAppState }
-                    />
-                    <Input
-                        label="Total Delivery Fee (€)"
-                        id="fee"
-                        type={ TYPE_FLOAT }
-                        value={ deliveryFee.toFixed(2) }
-                        error=""
-                        description="Total cost of delivery in euros"
-                        setAppState={ setAppState }
-                        result
-                    />
+                <div>
+                    <h1>Delivery Fee Calculator</h1>
+                    <form onSubmit={ handleSubmit(onSubmit) }>
+                        {
+                            INPUT_DETAILS.map((inputDetails) => renderInput(inputDetails))
+                        }
+                        <button type="submit">Calculate price</button>
+                        <Input
+                            label="Total Delivery Fee (€)"
+                            id="fee"
+                            type={ TYPE_FLOAT }
+                            description="Total cost of delivery in euros"
+                            readOnly
+                            value={ getResult().toFixed(2) }
+                        />
+                    </form>
                 </div>
             </main>
         </div>
