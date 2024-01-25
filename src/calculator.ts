@@ -1,5 +1,3 @@
-import { AppState } from 'types';
-
 const DELIVERY_FEE_MINIMUM = 0.00; // €
 const DELIVERY_FEE_MAXIMUM = 15.00; // €
 const CART_VALUE_MINIMUM = 10.00; // €
@@ -67,7 +65,12 @@ export const isRushHour = (orderTime: string): boolean => {
     return true;
 };
 
-export const getDeliveryFee = ({ cartValue, deliveryDistance, numberOfItems, orderTime }: AppState): number => {
+export const getDeliveryFee = (
+    cartValue: number,
+    deliveryDistance: number,
+    numberOfItems: number,
+    orderTime: string
+): number => {
     if (cartValue >= CART_VALUE_MAXIMUM) {
         return DELIVERY_FEE_MINIMUM;
     }
@@ -76,6 +79,7 @@ export const getDeliveryFee = ({ cartValue, deliveryDistance, numberOfItems, ord
     const deliveryDistanceSurcharge = getDeliveryDistanceSurcharge(deliveryDistance);
     const itemNumberSurcharge = getNumberOfItemsSurcharge(numberOfItems);
     const deliveryFee = cartValueSurcharge + deliveryDistanceSurcharge + itemNumberSurcharge;
+
     if (isRushHour(orderTime)) {
         const rushHourFee = deliveryFee * RUSH_HOUR_MULTIPLIER;
         return (rushHourFee < DELIVERY_FEE_MAXIMUM) ? rushHourFee : DELIVERY_FEE_MAXIMUM;

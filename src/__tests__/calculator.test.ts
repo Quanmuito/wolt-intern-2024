@@ -4,7 +4,7 @@ import {
     getNumberOfItemsSurcharge,
     isRushHour,
     getDeliveryFee
-} from 'utils';
+} from 'calculator';
 
 describe('Test get cart value surcharge', () => {
     const cartValueCases = [

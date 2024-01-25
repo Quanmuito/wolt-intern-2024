@@ -10,37 +10,47 @@ beforeEach(() => {
 test('Test render only', async () => {
     expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
     expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
-    expect(await screen.findByLabelText(/total delivery fee/i)).toBeInTheDocument();
+    expect(await screen.findByText(/total delivery fee/i)).toBeInTheDocument();
 });
 
 describe('Test cart value input', () => {
     const cartValueCases: [string, number][] = [
         ['10', 10],
         ['200', 200],
+        ['20.', 20],
         ['20.6', 20.6],
         ['40.6', 40.6],
     ];
     test.each(cartValueCases)(
-        'Cart value is %p and display value should be %p',
+        'Input is %p and display value should be %p',
         async (input, expected) => {
-            let cartValueInput = await screen.findByLabelText(/cart value/i);
+            const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            userEvent.clear(cartValueInput);
             userEvent.type(cartValueInput, input);
+            userEvent.keyboard('{Enter}');
             expect(cartValueInput).toHaveValue(expected);
         }
     );
 
-    test('Test input invalid', async () => {
-        let cartValueInput = await screen.findByLabelText(/cart value/i);
-        expect(cartValueInput).toBeInTheDocument();
+    const invalidCardValueCases: [string, RegExp][] = [
+        ['8.9.1', /invalid input. error: cart value should be a float number./i],
+        ['8,', /invalid input. error: cart value should be a float number./i],
+        ['8+1', /invalid input. error: cart value should be a float number./i],
+        ['-8', /invalid input. error: cart value should be positive./i],
+    ];
+    test.each(invalidCardValueCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const cartValueInput = await screen.findByLabelText(/cart value/i);
+            expect(cartValueInput).toBeInTheDocument();
 
-        userEvent.clear(cartValueInput);
-        userEvent.type(cartValueInput, '-10.5');
-        let errorMessage = await screen.findByText(/invalid input. error: please input a float/i);
-        expect(errorMessage).toBeInTheDocument();
-    });
+            userEvent.type(cartValueInput, input);
+            userEvent.keyboard('{Enter}');
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Test user event on delivery distance input', () => {
@@ -51,28 +61,37 @@ describe('Test user event on delivery distance input', () => {
         ['1499', 1499],
         ['1500', 1500],
         ['1501', 1501],
+        ['1501,', 1501],
     ];
     test.each(deliveryDistanceCases)(
-        'Delivery distance is %p and display value should be %p',
+        'Input is %p and display value should be %p',
         async (input, expected) => {
-            let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
+            const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            userEvent.clear(deliveryDistanceInput);
             userEvent.type(deliveryDistanceInput, input);
             expect(deliveryDistanceInput).toHaveValue(expected);
         }
     );
 
-    test('Test input float instead of integer', async () => {
-        let deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
-        expect(deliveryDistanceInput).toBeInTheDocument();
+    const invalidDeliveryDistanceCases: [string, RegExp][] = [
+        ['-500', /invalid input. Error: delivery distance should be positive./i],
+        ['500+', /please enter a number/i],
+        ['500.', /please enter a number/i],
+        ['500,5', /please enter a valid value. the two nearest valid values are 500 and 501/i],
+    ];
+    test.each(invalidDeliveryDistanceCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
+            expect(deliveryDistanceInput).toBeInTheDocument();
 
-        userEvent.clear(deliveryDistanceInput);
-        userEvent.type(deliveryDistanceInput, '1000.5');
-        let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
-        expect(errorMessage).toBeInTheDocument();
-    });
+            userEvent.type(deliveryDistanceInput, input);
+            userEvent.keyboard('{Enter}');
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Test user event on number of items input', () => {
@@ -83,26 +102,35 @@ describe('Test user event on number of items input', () => {
         ['6', 6],
         ['12', 12],
         ['13', 13],
+        ['13,', 13],
     ];
     test.each(numberOfItemsCases)(
         'Number of item is %p and display value should be %p',
         async (input, expected) => {
-            let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+            const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            userEvent.clear(numberOfItemsInput);
             userEvent.type(numberOfItemsInput, input);
             expect(numberOfItemsInput).toHaveValue(expected);
         }
     );
 
-    test('Test input float instead of integer', async () => {
-        let numberOfItemsInput = await screen.findByLabelText(/number of items/i);
-        expect(numberOfItemsInput).toBeInTheDocument();
+    const invalidNumberOfItemsCases: [string, RegExp][] = [
+        ['-5', /invalid input. Error: number of items should be positive./i],
+        ['5+', /please enter a number/i],
+        ['5.', /please enter a number/i],
+        ['5,5', /please enter a valid value. the two nearest valid values are 5 and 6/i],
+    ];
+    test.each(invalidNumberOfItemsCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+            expect(numberOfItemsInput).toBeInTheDocument();
 
-        userEvent.clear(numberOfItemsInput);
-        userEvent.type(numberOfItemsInput, '13.5');
-        let errorMessage = await screen.findByText(/invalid input. error: please input an integer/i);
-        expect(errorMessage).toBeInTheDocument();
-    });
+            userEvent.type(numberOfItemsInput, input);
+            userEvent.keyboard('{Enter}');
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });

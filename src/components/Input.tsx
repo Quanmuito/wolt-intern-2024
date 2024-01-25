@@ -1,18 +1,16 @@
 import React from 'react';
 import { UseFormRegister, RegisterOptions } from 'react-hook-form';
-import { FormFields } from 'types';
+import { AppState } from 'types';
 import { isEmptyString } from 'utils';
 
 type InputPropsType = {
+    id: keyof AppState,
     label: string,
-    id: keyof FormFields,
     type: string,
     description: string,
-    errorMessage?: string
-    readOnly?: boolean,
-    value?: string,
-    datetime?: boolean,
-    register?:  UseFormRegister<FormFields>
+    errorMessage: string
+    datetime: boolean,
+    register:  UseFormRegister<AppState>
 }
 
 export const Input = ({
@@ -21,12 +19,10 @@ export const Input = ({
     type,
     description,
     errorMessage = '',
-    readOnly = false,
-    value = '',
     datetime = false,
     register,
 }: InputPropsType) => {
-    const options: RegisterOptions<FormFields, keyof FormFields> = {
+    const options: RegisterOptions<AppState, keyof AppState> = {
         required: true,
     };
 
@@ -36,25 +32,7 @@ export const Input = ({
         options.valueAsNumber = true;
     }
 
-    const getAttribute = () => {
-        if (!readOnly && register !== undefined) {
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            now.setMilliseconds(0);
-            now.setSeconds(0);
-            const defaultValue = datetime ? now.toISOString().slice(0, -1) : '';
-
-            return {
-                defaultValue: defaultValue,
-                ...register(id, options),
-            };
-        }
-
-        return {
-            readOnly: true,
-            value: value,
-        };
-    };
+    const isValid = isEmptyString(errorMessage);
 
     return (
         <div>
@@ -68,14 +46,16 @@ export const Input = ({
                 id={ id }
                 data-test-id={ id }
                 type={ type }
+                defaultValue={ datetime ? new Date().toISOString().slice(0, 16) : '' }
                 aria-label={ label }
                 aria-labelledby={ `${id}-label` }
                 aria-describedby={ `${id}Feedback` }
-                aria-required={ false }
-                { ...getAttribute() }
+                aria-required={ true }
+                aria-invalid={ !isValid }
+                { ...register(id) }
             />
             <div id={ `${id}Feedback` }>
-                <span>{ isEmptyString(errorMessage) ? description : `Invalid input. Error: ${errorMessage}` }</span>
+                <span>{ isValid ? description : `Invalid input. Error: ${errorMessage}` }</span>
             </div>
         </div>
     );

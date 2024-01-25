@@ -1,5 +1,5 @@
-export const TYPE_INT = 'number';
-export const TYPE_FLOAT = 'text';
+export const TYPE_NUMBER = 'number';
+export const TYPE_TEXT = 'text';
 export const TYPE_DATETIME = 'datetime-local';
 
 export const isEmptyString = (string: string): boolean => {
