@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -28,7 +28,7 @@ describe('Test cart value input', () => {
             expect(cartValueInput).toBeInTheDocument();
 
             userEvent.type(cartValueInput, input);
-            act(() => userEvent.keyboard('{Enter}'));
+            userEvent.keyboard('{Enter}');
             expect(cartValueInput).toHaveValue(expected);
         }
     );
@@ -44,7 +44,7 @@ describe('Test cart value input', () => {
             expect(cartValueInput).toBeInTheDocument();
 
             userEvent.type(cartValueInput, input);
-            act(() => userEvent.keyboard('{Enter}'));
+            userEvent.keyboard('{Enter}');
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
@@ -82,7 +82,7 @@ describe('Test user event on delivery distance input', () => {
             expect(deliveryDistanceInput).toBeInTheDocument();
 
             userEvent.type(deliveryDistanceInput, input);
-            act(() => userEvent.keyboard('{Enter}'));
+            userEvent.keyboard('{Enter}');
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
@@ -120,7 +120,7 @@ describe('Test user event on number of items input', () => {
             expect(numberOfItemsInput).toBeInTheDocument();
 
             userEvent.type(numberOfItemsInput, input);
-            act(() => userEvent.keyboard('{Enter}'));
+            userEvent.keyboard('{Enter}');
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
