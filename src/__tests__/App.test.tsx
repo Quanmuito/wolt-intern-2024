@@ -17,7 +17,7 @@ describe('Test cart value input', () => {
     const cartValueCases: [string, string][] = [
         ['10', '10'],
         ['200', '200'],
-        ['20.', '20,'],
+        ['20.', '20.'],
         ['20.6', '20.6'],
         ['40.6', '40.6'],
     ];
@@ -52,14 +52,14 @@ describe('Test cart value input', () => {
 });
 
 describe('Test user event on delivery distance input', () => {
-    const deliveryDistanceCases: [string, string][] = [
-        ['500', '500'],
-        ['1000', '1000'],
-        ['1200', '1200'],
-        ['1499', '1499'],
-        ['1500', '1500'],
-        ['1501', '1501'],
-        ['1501,', '1501'],
+    const deliveryDistanceCases: [string, number][] = [
+        ['500', 500],
+        ['1000', 1000],
+        ['1200', 1200],
+        ['1499', 1499],
+        ['1500', 1500],
+        ['1501', 1501],
+        ['1501,', 1501],
     ];
     test.each(deliveryDistanceCases)(
         'Input is %p and display value should be %p',
