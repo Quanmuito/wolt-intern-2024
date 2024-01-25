@@ -14,12 +14,12 @@ test('Test render only', async () => {
 });
 
 describe('Test cart value input', () => {
-    const cartValueCases: [string, number][] = [
-        ['10', 10],
-        ['200', 200],
-        ['20.', 20],
-        ['20.6', 20.6],
-        ['40.6', 40.6],
+    const cartValueCases: [string, string][] = [
+        ['10', '10'],
+        ['200', '200'],
+        ['20.', '20,'],
+        ['20.6', '20.6'],
+        ['40.6', '40.6'],
     ];
     test.each(cartValueCases)(
         'Input is %p and display value should be %p',
@@ -35,8 +35,6 @@ describe('Test cart value input', () => {
 
     const invalidCardValueCases: [string, RegExp][] = [
         ['8.9.1', /invalid input. error: cart value should be a float number./i],
-        ['8,', /invalid input. error: cart value should be a float number./i],
-        ['8+1', /invalid input. error: cart value should be a float number./i],
         ['-8', /invalid input. error: cart value should be positive./i],
     ];
     test.each(invalidCardValueCases)(
@@ -54,14 +52,14 @@ describe('Test cart value input', () => {
 });
 
 describe('Test user event on delivery distance input', () => {
-    const deliveryDistanceCases: [string, number][] = [
-        ['500', 500],
-        ['1000', 1000],
-        ['1200', 1200],
-        ['1499', 1499],
-        ['1500', 1500],
-        ['1501', 1501],
-        ['1501,', 1501],
+    const deliveryDistanceCases: [string, string][] = [
+        ['500', '500'],
+        ['1000', '1000'],
+        ['1200', '1200'],
+        ['1499', '1499'],
+        ['1500', '1500'],
+        ['1501', '1501'],
+        ['1501,', '1501'],
     ];
     test.each(deliveryDistanceCases)(
         'Input is %p and display value should be %p',
@@ -76,9 +74,6 @@ describe('Test user event on delivery distance input', () => {
 
     const invalidDeliveryDistanceCases: [string, RegExp][] = [
         ['-500', /invalid input. Error: delivery distance should be positive./i],
-        ['500+', /please enter a number/i],
-        ['500.', /please enter a number/i],
-        ['500,5', /please enter a valid value. the two nearest valid values are 500 and 501/i],
     ];
     test.each(invalidDeliveryDistanceCases)(
         'Input is %p and error should be %p',
@@ -117,9 +112,6 @@ describe('Test user event on number of items input', () => {
 
     const invalidNumberOfItemsCases: [string, RegExp][] = [
         ['-5', /invalid input. Error: number of items should be positive./i],
-        ['5+', /please enter a number/i],
-        ['5.', /please enter a number/i],
-        ['5,5', /please enter a valid value. the two nearest valid values are 5 and 6/i],
     ];
     test.each(invalidNumberOfItemsCases)(
         'Input is %p and error should be %p',

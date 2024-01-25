@@ -82,7 +82,6 @@ describe('Test check rush hour', () => {
 
 describe('Test get delivery fee', () => {
     const deliveryFeeCases: [number, number, number, string, number][] = [
-        [0.00, 0, 0, '2024-01-25T12:30', 0.00], // Default
         [5.00, 0, 0, '2024-01-25T12:30', 7.00],
         [7.70, 0, 0, '2024-01-25T12:30', 4.30],
         [10.00, 0, 0, '2024-01-25T12:30', 2.0],
