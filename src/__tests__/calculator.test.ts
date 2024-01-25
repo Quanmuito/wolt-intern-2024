@@ -18,7 +18,7 @@ describe('Test get cart value surcharge', () => {
     test.each(cartValueCases)(
         'Cart value is %p and surcharge amount should be %p',
         (cartValue, surcharge) => {
-            let result = getCartValueSurcharge(cartValue);
+            const result = getCartValueSurcharge(cartValue);
             expect(result.toFixed(2)).toEqual(surcharge.toFixed(2));
         }
     );
@@ -36,7 +36,7 @@ describe('Test get delivery distance surcharge', () => {
     test.each(deliveryDistanceCases)(
         'Delivery distance is %p and surcharge amount should be %p',
         (deliveryDistance, surcharge) => {
-            let result = getDeliveryDistanceSurcharge(deliveryDistance);
+            const result = getDeliveryDistanceSurcharge(deliveryDistance);
             expect(result.toFixed(2)).toEqual(surcharge.toFixed(2));
         }
     );
@@ -53,7 +53,7 @@ describe('Test get number of items surcharge', () => {
     test.each(numberOfItemsCases)(
         'Number of items is %p and surcharge amount should be %p',
         (numberOfItems, surcharge) => {
-            let result = getNumberOfItemsSurcharge(numberOfItems);
+            const result = getNumberOfItemsSurcharge(numberOfItems);
             expect(result.toFixed(2)).toEqual(surcharge.toFixed(2));
         }
     );
@@ -74,7 +74,7 @@ describe('Test check rush hour', () => {
     test.each(rushHourCases)(
         'Input timestamp is %p and result should be %p',
         (timestamp, expected) => {
-            let result = isRushHour(timestamp);
+            const result = isRushHour(timestamp);
             expect(result).toBe(expected);
         }
     );
@@ -104,7 +104,7 @@ describe('Test get delivery fee', () => {
     test.each(deliveryFeeCases)(
         'Inputs: cartValue %p, distance %p, items %p, date %p and fee shoulld be %p',
         (cartValue, deliveryDistance, numberOfItems, orderTime, fee) => {
-            let result = getDeliveryFee(cartValue, deliveryDistance, numberOfItems, orderTime);
+            const result = getDeliveryFee(cartValue, deliveryDistance, numberOfItems, orderTime);
             expect(result.toFixed(2)).toBe(fee.toFixed(2));
         }
     );
