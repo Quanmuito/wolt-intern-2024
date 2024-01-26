@@ -15,6 +15,7 @@ test('Test render only', async () => {
 
 describe('Test cart value input', () => {
     const cartValueCases: [string, string][] = [
+        ['0', '0'],
         ['10', '10'],
         ['200', '200'],
         ['20.', '20.'],
