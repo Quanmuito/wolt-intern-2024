@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Input } from 'components';
+import {
+    InputText,
+    InputNumber,
+    InputDatetime,
+    InputLabel,
+    InputFeedback,
+    InputSubmit
+} from 'components';
 import { getDeliveryFee } from 'calculator';
 import { FormValues } from 'types';
-import {
-    TYPE_DATETIME,
-    TYPE_NUMBER,
-    TYPE_TEXT,
-    isZero
-} from 'utils';
+import { isZero } from 'utils';
 import style from 'style/style.module.css';
 
+const defaultValues: FormValues = {
+    cartValue: 0,
+    deliveryDistance: 0,
+    numberOfItems: 0,
+    orderTime: new Date().toISOString().slice(0, 16),
+};
+
 export default function App() {
-    const { register, handleSubmit, setError, formState: { errors } } = useForm<FormValues>({
-        defaultValues: {
-            cartValue: 0,
-            deliveryDistance: 0,
-            numberOfItems: 0,
-            orderTime: new Date().toISOString().slice(0, 16),
-        },
+    const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormValues>({
+        defaultValues: defaultValues,
     });
     const [fee, setFee] = useState<number>(0);
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        await new Promise((resolve) => setTimeout(resolve, 800));
         if (isNaN(data.cartValue)) {
             setError('cartValue', {
                 type: 'manual',
@@ -68,44 +73,116 @@ export default function App() {
                 <div className={ style.wrapper }>
                     <div className={ style.container }>
                         <div className={ style.title }>Delivery Fee Calculator</div>
-                        <Input
-                            id="cartValue"
-                            label="Cart value (€)"
-                            type={ TYPE_TEXT }
-                            description="Value of the shopping cart in euros."
-                            options={ register("cartValue", { valueAsNumber: true }) }
-                            errorMessage={ errors.cartValue?.message ?? '' }
-                        />
-                        <Input
-                            id="deliveryDistance"
-                            label="Delivery distance (meters)"
-                            type={ TYPE_NUMBER }
-                            description="The distance between the store and location of customer in meters."
-                            options={ register("deliveryDistance", { valueAsNumber: true }) }
-                            errorMessage={ errors.deliveryDistance?.message ?? '' }
-                        />
-                        <Input
-                            id="numberOfItems"
-                            label="Number of items"
-                            type={ TYPE_NUMBER }
-                            description="The number of items in the shopping cart of customer."
-                            options={ register("numberOfItems", { valueAsNumber: true }) }
-                            errorMessage={ errors.numberOfItems?.message ?? '' }
-                        />
-                        <Input
-                            id="orderTime"
-                            label="Order time (datetime)"
-                            type={ TYPE_DATETIME }
-                            description="The date/time when the order is being made"
-                            options={ register("orderTime", { valueAsDate: true }) }
-                            errorMessage={ errors.orderTime?.message ?? '' }
-                        />
-                        <div className={ style.group } style={ { border: 'none' } }>
-                            <input type="submit" className={ style.button } value="Calculate delivery price" />
+                        <div className={ style.group }>
+                            <InputLabel
+                                id="cartValue"
+                                label="Cart value (€)"
+                                options={ { className: style.label } }
+                            />
+                            <InputText
+                                id="cartValue"
+                                options={ {
+                                    ...register('cartValue', { valueAsNumber: true }),
+                                    className: style.input,
+                                    'data-test-id': 'cartValue',
+                                } }
+                            />
+                            <InputFeedback
+                                id="cartValue"
+                                description="Value of the shopping cart in euros."
+                                error={ errors.cartValue?.message }
+                                options={ {
+                                    className: !errors.cartValue?.message ? style.description : style.invalid,
+                                } }
+                            />
                         </div>
+
+                        <div className={ style.group }>
+                            <InputLabel
+                                id="deliveryDistance"
+                                label="Delivery distance (meters)"
+                                options={ { className: style.label } }
+                            />
+                            <InputNumber
+                                id="deliveryDistance"
+                                options={ {
+                                    ...register('deliveryDistance', { valueAsNumber: true }),
+                                    className: style.input,
+                                    'data-test-id': 'deliveryDistance',
+                                } }
+                            />
+                            <InputFeedback
+                                id="deliveryDistance"
+                                description="The distance between the store and location of customer in meters."
+                                error={ errors.deliveryDistance?.message }
+                                options={ {
+                                    className: !errors.deliveryDistance?.message ? style.description : style.invalid,
+                                } }
+                            />
+                        </div>
+
+                        <div className={ style.group }>
+                            <InputLabel
+                                id="numberOfItems"
+                                label="Number of items"
+                                options={ { className: style.label } }
+                            />
+                            <InputNumber
+                                id="numberOfItems"
+                                options={ {
+                                    ...register('numberOfItems', { valueAsNumber: true }),
+                                    className: style.input,
+                                    'data-test-id': 'numberOfItems',
+                                } }
+                            />
+                            <InputFeedback
+                                id="numberOfItems"
+                                description="The number of items in the shopping cart of customer."
+                                error={ errors.numberOfItems?.message }
+                                options={ {
+                                    className: !errors.numberOfItems?.message ? style.description : style.invalid,
+                                } }
+                            />
+                        </div>
+
+                        <div className={ style.group }>
+                            <InputLabel
+                                id="orderTime"
+                                label="Order time (datetime)"
+                                options={ { className: style.label } }
+                            />
+                            <InputDatetime
+                                id="orderTime"
+                                options={ {
+                                    ...register('orderTime', { valueAsDate: true }),
+                                    className: style.input,
+                                    'data-test-id': 'orderTime',
+                                } }
+                            />
+                            <InputFeedback
+                                id="orderTime"
+                                description="The date/time when the order is being made"
+                                error={ errors.orderTime?.message }
+                                options={ {
+                                    className: !errors.orderTime?.message ? style.description : style.invalid,
+                                } }
+                            />
+                        </div>
+
+                        <div className={ style.group } style={ { border: 'none', padding: '1rem 5rem' } }>
+                            <InputSubmit
+                                id="submit"
+                                options={ {
+                                    className: style.button,
+                                    value: `${isSubmitting ? 'Calculating' : 'Calculate delivery price'}`,
+                                    disabled: isSubmitting,
+                                } }
+                            />
+                        </div>
+
                         <div className={ style.result }>
-                            <div className={ style.line }>Total delivery fee (€)</div>
-                            <div className={ style.line } data-test-id="fee">{ fee.toFixed(2) }</div>
+                            <p className={ style.line }>Total delivery fee (€)</p>
+                            <p className={ style.line } data-test-id="fee">{ fee.toFixed(2) }</p>
                         </div>
                     </div>
                 </div>
