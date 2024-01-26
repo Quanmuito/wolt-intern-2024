@@ -23,11 +23,11 @@ export const Input = ({
     const isValid = isEmptyString(errorMessage);
 
     return (
-        <div className={ style.inputGroup }>
+        <div className={ style.group }>
             <label
                 id={ `${id}-label` }
                 htmlFor={ id }
-                className={ style.inputLabel }
+                className={ style.label }
             >
                 { label }
             </label>
@@ -44,8 +44,8 @@ export const Input = ({
                 aria-invalid={ !isValid }
                 { ...options }
             />
-            <div id={ `${id}Feedback` } className={ isValid ? style.inputFeedback : style.invalid }>
-                <span>{ isValid ? description : `Invalid input. Error: ${errorMessage}` }</span>
+            <div id={ `${id}Feedback` } className={ isValid ? style.description : style.invalid }>
+                { isValid ? description : `Invalid input. Error: ${errorMessage}` }
             </div>
         </div>
     );

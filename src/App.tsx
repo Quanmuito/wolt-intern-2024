@@ -57,10 +57,10 @@ export default function App() {
 
     return (
         <div className="App">
-            <main className={ style.main }>
-                <div className={ style.container }>
-                    <h1 className={ style.title }>Delivery Fee Calculator</h1>
-                    <form className={ style.form } onSubmit={ handleSubmit(onSubmit) }>
+            <form className={ style.center } onSubmit={ handleSubmit(onSubmit) }>
+                <div className={ style.wrapper }>
+                    <div className={ style.container }>
+                        <div className={ style.title }>Delivery Fee Calculator</div>
                         <Input
                             id="cartValue"
                             label="Cart value (€)"
@@ -93,16 +93,16 @@ export default function App() {
                             options={ register("orderTime", { valueAsDate: true }) }
                             errorMessage={ errors.orderTime?.message ?? '' }
                         />
-                        <button className={ style.submit } type="submit">
-                            <h3>Calculate delivery price</h3>
-                        </button>
-                        <div className={ style.result }>
-                            <h3>Total delivery fee (€)</h3>
-                            <h3 data-test-id="fee">{ fee.toFixed(2) }</h3>
+                        <div className={ style.group } style={ { border: 'none' } }>
+                            <input type="submit" className={ style.button } value="Calculate delivery price" />
                         </div>
-                    </form>
+                        <div className={ style.result }>
+                            <div className={ style.line }>Total delivery fee</div>
+                            <div className={ style.line } data-test-id="fee">{ fee.toFixed(2) }</div>
+                        </div>
+                    </div>
                 </div>
-            </main>
+            </form>
         </div>
     );
 }
