@@ -27,6 +27,7 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
+            userEvent.clear(cartValueInput);
             userEvent.type(cartValueInput, input);
             userEvent.keyboard('{Enter}');
             expect(cartValueInput).toHaveValue(expected);
@@ -43,6 +44,7 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
+            userEvent.clear(cartValueInput);
             userEvent.type(cartValueInput, input);
             userEvent.keyboard('{Enter}');
             const error = await screen.findByText(pattern);
@@ -67,6 +69,7 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
+            userEvent.clear(deliveryDistanceInput);
             userEvent.type(deliveryDistanceInput, input);
             expect(deliveryDistanceInput).toHaveValue(expected);
         }
@@ -81,9 +84,9 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
+            userEvent.clear(deliveryDistanceInput);
             userEvent.type(deliveryDistanceInput, input);
             userEvent.keyboard('{Enter}');
-            userEvent.keyboard('{1}');
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
@@ -106,6 +109,7 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
+            userEvent.clear(numberOfItemsInput);
             userEvent.type(numberOfItemsInput, input);
             expect(numberOfItemsInput).toHaveValue(expected);
         }
@@ -120,6 +124,7 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
+            userEvent.clear(numberOfItemsInput);
             userEvent.type(numberOfItemsInput, input);
             userEvent.keyboard('{Enter}');
             const error = await screen.findByText(pattern);
