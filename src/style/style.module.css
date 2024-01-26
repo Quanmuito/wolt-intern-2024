@@ -1,4 +1,8 @@
 @value --primary--: #009de0;
+@value --error--: rgb(255, 55, 55);
+@value --border--: rgba(255, 255, 255, .2);
+@value --background--: rgba(40, 57, 101, 0.945);
+@value --surface--: rgba(255, 255, 255, .1);
 
 /** Calculator style */
 
@@ -28,7 +32,7 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background: rgba(40, 57, 101, 0.945);
+    background: --background--;
 }
 
 .title {
@@ -41,7 +45,7 @@
 
 .group {
     width: 100%;
-    border-bottom: 0.25rem solid rgba(255, 255, 255, .2);
+    border-bottom: 0.25rem solid --border--;
     padding-top: 2rem;
 }
 
@@ -52,7 +56,7 @@
     border-radius: 2rem;
     padding: 1.5rem 3rem;
     display: block;
-    background: rgba(255, 255, 255, .1);
+    background: --surface--;
     color: #fff;
     font-size: 1rem;
 }
@@ -77,9 +81,19 @@
     background-color: #1162ee5e;
 }
 
+.labelGroup {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .label {
     font-size: 1.2rem;
     text-transform: uppercase;
+}
+
+.tooltip {
+    color: --primary--
 }
 
 .description {
@@ -88,12 +102,12 @@
 
 .invalid {
     font-size: 1rem;
-    color: rgb(255, 55, 55);
+    color: --error--;
 }
 
 .result {
     width: 100%;
-    border-top: 0.25rem solid rgba(255, 255, 255, .2);
+    border-top: 0.25rem solid --border--;
     padding-top: 2rem;
 }
 

@@ -8,17 +8,17 @@ import {
     InputFeedback,
     InputSubmit
 } from 'components';
-import { getDeliveryFee } from 'calculator';
+import {
+    CART_VALUE_MAX,
+    DISTANCE_MIN,
+    NUMBER_BULK,
+    NUMBER_FREE,
+    isRushHour,
+    getDeliveryFee
+} from 'calculator';
 import { FormValues } from 'types';
 import { isZero } from 'utils';
 import style from 'style/style.module.css';
-
-const FORM_FIELDS: {[index: string]: keyof FormValues} = {
-    CART_VALUE: 'cartValue',
-    DELIVERY_DISTANCE: 'deliveryDistance',
-    NUMBER_OF_ITEMS: 'numberOfItems',
-    ORDER_TIME: 'orderTime',
-};
 
 const defaultValues: FormValues = {
     cartValue: 0,
@@ -28,15 +28,19 @@ const defaultValues: FormValues = {
 };
 
 export default function App() {
-    const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<FormValues>({
-        defaultValues: defaultValues,
-    });
+    const {
+        register,
+        handleSubmit,
+        setError,
+        watch,
+        formState: { errors, isSubmitting },
+    } = useForm<FormValues>({ defaultValues: defaultValues });
     const [fee, setFee] = useState<number>(0);
 
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        if (isNaN(data.cartValue)) {
-            setError(FORM_FIELDS.CART_VALUE, {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        if (Number.isNaN(data.cartValue)) {
+            setError('cartValue', {
                 type: 'manual',
                 message: 'Cart value should be a float number.',
             });
@@ -44,7 +48,7 @@ export default function App() {
         }
 
         if (data.cartValue < 0) {
-            setError(FORM_FIELDS.CART_VALUE, {
+            setError('cartValue', {
                 type: 'manual',
                 message: 'Cart value should be positive.',
             });
@@ -52,7 +56,7 @@ export default function App() {
         }
 
         if (data.deliveryDistance < 0) {
-            setError(FORM_FIELDS.DELIVERY_DISTANCE, {
+            setError('deliveryDistance', {
                 type: 'manual',
                 message: 'Delivery distance should be positive.',
             });
@@ -60,7 +64,7 @@ export default function App() {
         }
 
         if (data.numberOfItems < 0) {
-            setError(FORM_FIELDS.NUMBER_OF_ITEMS, {
+            setError('numberOfItems', {
                 type: 'manual',
                 message: 'Number of items should be positive.',
             });
@@ -74,107 +78,178 @@ export default function App() {
         }
     };
 
+    const renderCartValueInput = (): JSX.Element => {
+        const getTooltip = (): string => {
+            const current = watch().cartValue;
+            if (!Number.isNaN(current)) {
+                const remain = CART_VALUE_MAX - current;
+                return remain > 0
+                    ? `${remain}€ more for free delivery`
+                    : 'Free delivery!';
+            }
+            return '';
+        };
+
+        return (
+            <div className={ style.group }>
+                <div className={ style.labelGroup }>
+                    <InputLabel
+                        id="cartValue"
+                        label="Cart value (€)"
+                        options={ { className: style.label } }
+                    />
+                    <span className={ style.tooltip }>{ getTooltip() }</span>
+                </div>
+                <InputText
+                    id="cartValue"
+                    options={ {
+                        ...register('cartValue', { valueAsNumber: true }),
+                        className: style.input,
+                        'data-test-id': 'cartValue',
+                    } }
+                />
+                <InputFeedback
+                    id="cartValue"
+                    description="Value of the shopping cart in euros."
+                    error={ errors.cartValue?.message }
+                    options={ {
+                        className: !errors.cartValue?.message ? style.description : style.invalid,
+                    } }
+                />
+            </div>
+        );
+    };
+
+    const renderDeliveryDistanceInput = (): JSX.Element => {
+        const remain = DISTANCE_MIN - watch().deliveryDistance;
+        const tooltip = !Number.isNaN(remain) && Number.isInteger(remain) && remain > 0
+            ? 'Minimum surcharge'
+            : '';
+
+        return (
+            <div className={ style.group }>
+                <div className={ style.labelGroup }>
+                    <InputLabel
+                        id="deliveryDistance"
+                        label="Delivery distance (meters)"
+                        options={ { className: style.label } }
+                    />
+                    <span className={ style.tooltip }>{ tooltip }</span>
+                </div>
+
+                <InputNumber
+                    id="deliveryDistance"
+                    options={ {
+                        ...register('deliveryDistance', { valueAsNumber: true }),
+                        className: style.input,
+                        'data-test-id': 'deliveryDistance',
+                    } }
+                />
+                <InputFeedback
+                    id="deliveryDistance"
+                    description="The distance between the store and location of customer in meters."
+                    error={ errors.deliveryDistance?.message }
+                    options={ {
+                        className: !errors.deliveryDistance?.message ? style.description : style.invalid,
+                    } }
+                />
+            </div>
+        );
+    };
+
+    const renderNumberOfItemInput = (): JSX.Element => {
+        const getTooltip = (): string => {
+            const current = watch().numberOfItems;
+            if (!Number.isNaN(current) && Number.isInteger(current)) {
+                if (current <= NUMBER_FREE) {
+                    const remain = NUMBER_FREE - current;
+                    return `${remain} left free of charge`;
+                }
+
+                if (current <= NUMBER_BULK) {
+                    const remain = NUMBER_BULK - current;
+                    return `${remain} left till bulk charge`;
+                }
+
+                return 'Bulk charge added';
+            }
+            return '';
+        };
+
+        return (
+            <div className={ style.group }>
+                <div className={ style.labelGroup }>
+                    <InputLabel
+                        id="numberOfItems"
+                        label="Number of items"
+                        options={ { className: style.label } }
+                    />
+                    <span className={ style.tooltip }>{ getTooltip() }</span>
+                </div>
+                <InputNumber
+                    id="numberOfItems"
+                    options={ {
+                        ...register('numberOfItems', { valueAsNumber: true }),
+                        className: style.input,
+                        'data-test-id': 'numberOfItems',
+                    } }
+                />
+                <InputFeedback
+                    id="numberOfItems"
+                    description="The number of items in the shopping cart of customer."
+                    error={ errors.numberOfItems?.message }
+                    options={ {
+                        className: !errors.numberOfItems?.message ? style.description : style.invalid,
+                    } }
+                />
+            </div>
+        );
+    };
+
+    const renderOrderTimeInput = (): JSX.Element => {
+        return (
+            <div className={ style.group }>
+                <div className={ style.labelGroup }>
+                    <InputLabel
+                        id="orderTime"
+                        label="Order time (datetime)"
+                        options={ { className: style.label } }
+                    />
+                    <span className={ style.tooltip }>
+                        { isRushHour(watch().orderTime) ? 'Rush hour selected!' : 'No surcharge' }
+                    </span>
+                </div>
+                <InputDatetime
+                    id="orderTime"
+                    options={ {
+                        ...register('orderTime', { valueAsDate: true }),
+                        className: style.input,
+                        'data-test-id': 'orderTime',
+                    } }
+                />
+                <InputFeedback
+                    id="orderTime"
+                    description="The datetime when the order is being made"
+                    error={ errors.orderTime?.message }
+                    options={ {
+                        className: style.description,
+                    } }
+                />
+            </div>
+        );
+    };
+
     return (
         <div className="App">
             <form className={ style.center } onSubmit={ handleSubmit(onSubmit) }>
                 <div className={ style.wrapper }>
                     <div className={ style.container }>
                         <div className={ style.title }>Delivery Fee Calculator</div>
-                        <div className={ style.group }>
-                            <InputLabel
-                                id={ FORM_FIELDS.CART_VALUE }
-                                label="Cart value (€)"
-                                options={ { className: style.label } }
-                            />
-                            <InputText
-                                id={ FORM_FIELDS.CART_VALUE }
-                                options={ {
-                                    ...register(FORM_FIELDS.CART_VALUE, { valueAsNumber: true }),
-                                    className: style.input,
-                                    'data-test-id': FORM_FIELDS.CART_VALUE,
-                                } }
-                            />
-                            <InputFeedback
-                                id={ FORM_FIELDS.CART_VALUE }
-                                description="Value of the shopping cart in euros."
-                                error={ errors.cartValue?.message }
-                                options={ {
-                                    className: !errors.cartValue?.message ? style.description : style.invalid,
-                                } }
-                            />
-                        </div>
 
-                        <div className={ style.group }>
-                            <InputLabel
-                                id={ FORM_FIELDS.DELIVERY_DISTANCE }
-                                label="Delivery distance (meters)"
-                                options={ { className: style.label } }
-                            />
-                            <InputNumber
-                                id={ FORM_FIELDS.DELIVERY_DISTANCE }
-                                options={ {
-                                    ...register(FORM_FIELDS.DELIVERY_DISTANCE, { valueAsNumber: true }),
-                                    className: style.input,
-                                    'data-test-id': FORM_FIELDS.DELIVERY_DISTANCE,
-                                } }
-                            />
-                            <InputFeedback
-                                id={ FORM_FIELDS.DELIVERY_DISTANCE }
-                                description="The distance between the store and location of customer in meters."
-                                error={ errors.deliveryDistance?.message }
-                                options={ {
-                                    className: !errors.deliveryDistance?.message ? style.description : style.invalid,
-                                } }
-                            />
-                        </div>
-
-                        <div className={ style.group }>
-                            <InputLabel
-                                id={ FORM_FIELDS.NUMBER_OF_ITEMS }
-                                label="Number of items"
-                                options={ { className: style.label } }
-                            />
-                            <InputNumber
-                                id={ FORM_FIELDS.NUMBER_OF_ITEMS }
-                                options={ {
-                                    ...register(FORM_FIELDS.NUMBER_OF_ITEMS, { valueAsNumber: true }),
-                                    className: style.input,
-                                    'data-test-id': FORM_FIELDS.NUMBER_OF_ITEMS,
-                                } }
-                            />
-                            <InputFeedback
-                                id={ FORM_FIELDS.NUMBER_OF_ITEMS }
-                                description="The number of items in the shopping cart of customer."
-                                error={ errors.numberOfItems?.message }
-                                options={ {
-                                    className: !errors.numberOfItems?.message ? style.description : style.invalid,
-                                } }
-                            />
-                        </div>
-
-                        <div className={ style.group }>
-                            <InputLabel
-                                id={ FORM_FIELDS.ORDER_TIME }
-                                label="Order time (datetime)"
-                                options={ { className: style.label } }
-                            />
-                            <InputDatetime
-                                id={ FORM_FIELDS.ORDER_TIME }
-                                options={ {
-                                    ...register(FORM_FIELDS.ORDER_TIME, { valueAsDate: true }),
-                                    className: style.input,
-                                    'data-test-id': FORM_FIELDS.ORDER_TIME,
-                                } }
-                            />
-                            <InputFeedback
-                                id={ FORM_FIELDS.ORDER_TIME }
-                                description="The date/time when the order is being made"
-                                error={ errors.orderTime?.message }
-                                options={ {
-                                    className: style.description,
-                                } }
-                            />
-                        </div>
+                        { renderCartValueInput() }
+                        { renderDeliveryDistanceInput() }
+                        { renderNumberOfItemInput() }
+                        { renderOrderTimeInput() }
 
                         <div className={ style.group } style={ { border: 'none', padding: '1rem 5rem' } }>
                             <InputSubmit

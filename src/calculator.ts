@@ -1,21 +1,22 @@
-const DELIVERY_FEE_MAX = 15; // €
+export const DELIVERY_FEE_MAX = 15; // €
 
-const CART_VALUE_MIN = 10; // €
-const CART_VALUE_MAX = 200.00; // €
+export const CART_VALUE_MIN = 10; // €
+export const CART_VALUE_MAX = 200.00; // €
 
-const DISTANCE_INTERVAL = 500; // m
-const DISTANCE_SURCHARGE_MIN = 2; // €
-const DISTANCE_SURCHARGE_INTERVAL = 1; // €
+export const DISTANCE_MIN = 1000; // m
+export const DISTANCE_INTERVAL = 500; // m
+export const DISTANCE_SURCHARGE_MIN = 2; // €
+export const DISTANCE_SURCHARGE_INTERVAL = 1; // €
 
-const NUMBER_INTERVAL = 0.5; // €
-const NUMBER_FREE = 4;
-const NUMBER_BULK = 12;
-const NUMBER_BULK_SURCHARGE = 1.2; // €
+export const NUMBER_INTERVAL = 0.5; // €
+export const NUMBER_FREE = 4;
+export const NUMBER_BULK = 12;
+export const NUMBER_BULK_SURCHARGE = 1.2; // €
 
-const RUSH_HOUR_DAY = 5;
-const RUSH_HOURS_START = 15;
-const RUSH_HOURS_END = 19;
-const RUSH_HOUR_MULTIPLIER = 1.2;
+export const RUSH_HOUR_DAY = 5;
+export const RUSH_HOURS_START = 15;
+export const RUSH_HOURS_END = 19;
+export const RUSH_HOUR_MULTIPLIER = 1.2;
 
 export const getCartValueSurcharge = (cartValue: number): number => {
     const difference = CART_VALUE_MIN - cartValue;
