@@ -12,7 +12,14 @@ import {
 import style from 'style/style.module.css';
 
 export default function App() {
-    const { register, handleSubmit, setError, formState: { errors } } = useForm<FormValues>();
+    const { register, handleSubmit, setError, formState: { errors } } = useForm<FormValues>({
+        defaultValues: {
+            cartValue: 0,
+            deliveryDistance: 0,
+            numberOfItems: 0,
+            orderTime: new Date().toISOString().slice(0, 16),
+        },
+    });
     const [fee, setFee] = useState<number>(0);
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -97,7 +104,7 @@ export default function App() {
                             <input type="submit" className={ style.button } value="Calculate delivery price" />
                         </div>
                         <div className={ style.result }>
-                            <div className={ style.line }>Total delivery fee</div>
+                            <div className={ style.line }>Total delivery fee (€)</div>
                             <div className={ style.line } data-test-id="fee">{ fee.toFixed(2) }</div>
                         </div>
                     </div>

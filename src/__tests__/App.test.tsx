@@ -83,6 +83,7 @@ describe('Test user event on delivery distance input', () => {
 
             userEvent.type(deliveryDistanceInput, input);
             userEvent.keyboard('{Enter}');
+            userEvent.keyboard('{1}');
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }

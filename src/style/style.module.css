@@ -11,7 +11,8 @@
     width: 45rem;
     height: 60rem;
     margin: auto;
-    background: url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center;
+    background: url(https://github.com/Quanmuito/wolt-intern-2024/blob/master/public/bg.jpg?raw=true) no-repeat center;
+    background-size: cover;
     box-shadow: 0 1.5rem 2rem 0 rgba(0, 0, 0, .24), 0 1.5rem 6.25rem 0 rgba(0, 0, 0, .19);
 }
 
@@ -40,10 +41,6 @@
     border-bottom: 0.25rem solid rgba(255, 255, 255, .2);
 }
 
-#submitGroup {
-    border: none;
-}
-
 .input {
     width: 100%;
     border: none;
@@ -52,6 +49,12 @@
     display: block;
     background: rgba(255, 255, 255, .1);
     color: #fff;
+    font-size: 1rem;
+}
+
+.input:focus {
+    background-color: #fff;
+    color: #000;
 }
 
 .button {
@@ -62,6 +65,7 @@
     padding: 1.8rem 2.5rem;
     background-color: #1161ee;
     color: #fff;
+    font-size: 1rem;
 }
 
 .label {
