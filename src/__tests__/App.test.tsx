@@ -15,7 +15,6 @@ test('Test render', async () => {
 
 describe('Test cart value input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/cart value/i)).toBeInTheDocument();
         expect(await screen.findByText(/200€ more for free delivery/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/cart value/i)).toBeInTheDocument();
         expect(await screen.findByText(/value of the shopping cart in euros./i)).toBeInTheDocument();
@@ -48,6 +47,7 @@ describe('Test cart value input', () => {
         ['8.9', /191.1€ more for free delivery/i],
         ['100', /100€ more for free delivery/i],
         ['300', /free delivery!/i],
+        ['-30', /200€ for free delivery/i],
     ];
     test.each(tooltipCartValueCases)(
         'Input is %p and tooltip should be %p',
@@ -84,7 +84,6 @@ describe('Test cart value input', () => {
 
 describe('Test user event on delivery distance input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/delivery distance/i)).toBeInTheDocument();
         expect(await screen.findByText(/Minimum surcharge/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/delivery distance/i)).toBeInTheDocument();
         expect(await screen.findByText(/the distance between the store and location of customer in meters./i)).toBeInTheDocument();
@@ -118,6 +117,7 @@ describe('Test user event on delivery distance input', () => {
         ['500.', /minimum surchage under 1000m/i],
         ['500.6', /minimum surchage under 1000m/i],
         ['1200', /minimum surchage under 1000m/i],
+        ['-1200', /minimum surchage under 1000m/i],
     ];
     test.each(tooltipDeliveryDistanceCases)(
         'Input is %p and tooltip should be %p',
@@ -153,7 +153,6 @@ describe('Test user event on delivery distance input', () => {
 
 describe('Test user event on number of items input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/number of items/i)).toBeInTheDocument();
         expect(await screen.findByText(/4 left till surcharge/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/number of items/i)).toBeInTheDocument();
         expect(await screen.findByText(/The number of items in the shopping cart of customer./i)).toBeInTheDocument();
@@ -189,6 +188,7 @@ describe('Test user event on number of items input', () => {
         ['14', /bulk charge added/i],
         ['14.', /free under 4, bulk over 12/i],
         ['14.6', /free under 4, bulk over 12/i],
+        ['-5', /free under 4, bulk over 12/i],
     ];
     test.each(tooltipNumberOfItemsCases)(
         'Input is %p and tooltip should be %p',
@@ -224,7 +224,6 @@ describe('Test user event on number of items input', () => {
 
 describe('Test user event on order time input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/order time/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
         expect(await screen.findByText(/The datetime when the order is being made/i)).toBeInTheDocument();
     });

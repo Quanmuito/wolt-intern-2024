@@ -81,7 +81,7 @@ export default function App() {
     const renderCartValueInput = (): JSX.Element => {
         const getTooltip = (): string => {
             const current = watch().cartValue;
-            if (!Number.isNaN(current)) {
+            if (!Number.isNaN(current) && current > 0) {
                 const remain = CART_VALUE_MAX - current;
                 return remain > 0
                     ? `${remain}€ more for free delivery`
@@ -121,11 +121,16 @@ export default function App() {
     };
 
     const renderDeliveryDistanceInput = (): JSX.Element => {
-        const remain = DISTANCE_MIN - watch().deliveryDistance;
-        const tooltip = !Number.isNaN(remain) && Number.isInteger(remain) && remain > 0
-            ? 'Minimum surcharge added'
-            : 'Minimum surchage under 1000m';
-
+        const getTooltip = (): string => {
+            const current = watch().deliveryDistance;
+            if (!Number.isNaN(current) && Number.isInteger(current) && current > 0) {
+                const remain = DISTANCE_MIN - current;
+                return remain > 0
+                    ? 'Minimum surcharge added'
+                    : 'Minimum surchage under 1000m';
+            }
+            return 'Minimum surchage under 1000m';
+        };
         return (
             <div className={ style.group }>
                 <div className={ style.labelGroup }>
@@ -134,7 +139,7 @@ export default function App() {
                         label="Delivery distance (meters)"
                         options={ { className: style.label } }
                     />
-                    <span className={ style.tooltip }>{ tooltip }</span>
+                    <span className={ style.tooltip }>{ getTooltip() }</span>
                 </div>
 
                 <InputNumber
@@ -160,7 +165,7 @@ export default function App() {
     const renderNumberOfItemInput = (): JSX.Element => {
         const getTooltip = (): string => {
             const current = watch().numberOfItems;
-            if (!Number.isNaN(current) && Number.isInteger(current)) {
+            if (!Number.isNaN(current) && Number.isInteger(current) && current > 0) {
                 if (current <= NUMBER_FREE) {
                     const remain = NUMBER_FREE - current;
                     return `${remain} left free of charge`;
