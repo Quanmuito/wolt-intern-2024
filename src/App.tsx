@@ -87,7 +87,7 @@ export default function App() {
                     ? `${remain}€ more for free delivery`
                     : 'Free delivery!';
             }
-            return '';
+            return '200€ for free delivery';
         };
 
         return (
@@ -123,8 +123,8 @@ export default function App() {
     const renderDeliveryDistanceInput = (): JSX.Element => {
         const remain = DISTANCE_MIN - watch().deliveryDistance;
         const tooltip = !Number.isNaN(remain) && Number.isInteger(remain) && remain > 0
-            ? 'Minimum surcharge'
-            : '';
+            ? 'Minimum surcharge added'
+            : 'Minimum surchage under 1000m';
 
         return (
             <div className={ style.group }>
@@ -173,7 +173,7 @@ export default function App() {
 
                 return 'Bulk charge added';
             }
-            return '';
+            return 'Free under 4, bulk over 12';
         };
 
         return (

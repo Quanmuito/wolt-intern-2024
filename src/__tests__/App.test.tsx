@@ -43,7 +43,7 @@ describe('Test cart value input', () => {
     );
 
     const tooltipCartValueCases: [string, string|RegExp][] = [
-        ['', ''],
+        ['', /200€ for free delivery/i],
         ['6', /194€ more for free delivery/i],
         ['8.9', /191.1€ more for free delivery/i],
         ['100', /100€ more for free delivery/i],
@@ -111,13 +111,13 @@ describe('Test user event on delivery distance input', () => {
         }
     );
 
-    const tooltipDeliveryDistanceCases: [string, string|RegExp][] = [
-        ['', ''],
-        ['300', /Minimum surcharge/i],
-        ['500', /Minimum surcharge/i],
-        ['500.', ''],
-        ['500.6', ''],
-        ['1200', ''],
+    const tooltipDeliveryDistanceCases: [string, RegExp][] = [
+        ['', /minimum surchage under 1000m/i],
+        ['300', /minimum surcharge added/i],
+        ['500', /minimum surcharge added/i],
+        ['500.', /minimum surchage under 1000m/i],
+        ['500.6', /minimum surchage under 1000m/i],
+        ['1200', /minimum surchage under 1000m/i],
     ];
     test.each(tooltipDeliveryDistanceCases)(
         'Input is %p and tooltip should be %p',
@@ -180,15 +180,15 @@ describe('Test user event on number of items input', () => {
         }
     );
 
-    const tooltipNumberOfItemsCases: [string, string|RegExp][] = [
-        ['', ''],
+    const tooltipNumberOfItemsCases: [string, RegExp][] = [
+        ['', /free under 4, bulk over 12/i],
         ['2', /2 left free of charge/i],
         ['3', /1 left free of charge/i],
         ['5', /7 left till bulk charge/i],
         ['8', /4 left till bulk charge/i],
         ['14', /bulk charge added/i],
-        ['14.', ''],
-        ['14.6', ''],
+        ['14.', /free under 4, bulk over 12/i],
+        ['14.6', /free under 4, bulk over 12/i],
     ];
     test.each(tooltipNumberOfItemsCases)(
         'Input is %p and tooltip should be %p',
