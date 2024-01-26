@@ -49,7 +49,7 @@ export const InputDatetime = ({ id, options }: InputPropsType) => {
 
 export const InputSubmit = ({ id, options }: InputPropsType) => {
     return (
-        <input id={ id } type="submit" { ...options } />
+        <input id={ id } type="submit" aria-label="submit" { ...options } />
     );
 };
 

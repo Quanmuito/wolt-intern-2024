@@ -11,7 +11,7 @@ export const InputFeedback = (props: InputFeedbackPropsType) => {
     const { error } = props;
     return (error === undefined || isEmptyString(error))
         ? <InputFeedbackDescription { ...props } />
-        : <InputFeedbackDError error={ error } { ...props } />;
+        : <InputFeedbackError error={ error } { ...props } />;
 };
 
 type InputFeedbackDescriptionPropsType = {
@@ -32,7 +32,7 @@ type InputFeedbackErrorPropsType = {
     error: string,
     options: {[x: string]: any},
 }
-export const InputFeedbackDError = ({ id, error, options }: InputFeedbackErrorPropsType) => {
+export const InputFeedbackError = ({ id, error, options }: InputFeedbackErrorPropsType) => {
     return (
         <div id={ `${id}-feedback` } { ...options }>
             { `Invalid input. Error: ${error}` }
