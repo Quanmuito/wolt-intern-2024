@@ -15,7 +15,7 @@ test('Test render', async () => {
 
 describe('Test cart value input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/200€ more for free delivery/i)).toBeInTheDocument();
+        expect(await screen.findByText(/200€ for free delivery/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/cart value/i)).toBeInTheDocument();
         expect(await screen.findByText(/value of the shopping cart in euros./i)).toBeInTheDocument();
     });
@@ -84,7 +84,7 @@ describe('Test cart value input', () => {
 
 describe('Test user event on delivery distance input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/Minimum surcharge/i)).toBeInTheDocument();
+        expect(await screen.findByText(/minimum surchage under 1000m/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/delivery distance/i)).toBeInTheDocument();
         expect(await screen.findByText(/the distance between the store and location of customer in meters./i)).toBeInTheDocument();
     });
@@ -153,7 +153,7 @@ describe('Test user event on delivery distance input', () => {
 
 describe('Test user event on number of items input', () => {
     test('Test render input', async () => {
-        expect(await screen.findByText(/4 left till surcharge/i)).toBeInTheDocument();
+        expect(await screen.findByText(/free under 4, bulk over 12/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/number of items/i)).toBeInTheDocument();
         expect(await screen.findByText(/The number of items in the shopping cart of customer./i)).toBeInTheDocument();
     });
