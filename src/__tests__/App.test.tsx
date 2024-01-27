@@ -35,10 +35,8 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(cartValueInput);
-                userEvent.type(cartValueInput, input);
-            });
+            userEvent.clear(cartValueInput);
+            userEvent.type(cartValueInput, input);
 
             expect(cartValueInput).toHaveValue(expected);
         }
@@ -57,10 +55,8 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(cartValueInput);
-                userEvent.type(cartValueInput, input);
-            });
+            userEvent.clear(cartValueInput);
+            userEvent.type(cartValueInput, input);
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
@@ -145,25 +141,25 @@ describe('Test user event on delivery distance input', () => {
         }
     );
 
-    // const invalidDeliveryDistanceCases: [string, RegExp][] = [
-    //     ['-500', /invalid input. Error: delivery distance should be positive./i],
-    // ];
-    // test.each(invalidDeliveryDistanceCases)(
-    //     'Input is %p and error should be %p',
-    //     async (input, pattern) => {
-    //         const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
-    //         expect(deliveryDistanceInput).toBeInTheDocument();
+    const invalidDeliveryDistanceCases: [string, RegExp][] = [
+        ['-500', /invalid input. Error: delivery distance should be positive./i],
+    ];
+    test.each(invalidDeliveryDistanceCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
+            expect(deliveryDistanceInput).toBeInTheDocument();
 
-    //         act(() => {
-    //             userEvent.clear(deliveryDistanceInput);
-    //             userEvent.type(deliveryDistanceInput, input);
-    //             userEvent.keyboard('{Enter}');
-    //         });
+            act(() => {
+                userEvent.clear(deliveryDistanceInput);
+                userEvent.type(deliveryDistanceInput, input);
+                userEvent.keyboard('{Enter}');
+            });
 
-    //         const error = await screen.findByText(pattern);
-    //         expect(error).toBeInTheDocument();
-    //     }
-    // );
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Test user event on number of items input', () => {
