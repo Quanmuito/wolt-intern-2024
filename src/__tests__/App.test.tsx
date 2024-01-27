@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -230,5 +230,13 @@ describe('Test user event on order time input', () => {
     test('Test render input', async () => {
         expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
         expect(await screen.findByText(/The datetime when the order is being made/i)).toBeInTheDocument();
+    });
+
+    test('Test change input', async () => {
+        const orderTimeInput = await screen.findByLabelText(/order time/i);
+        expect(orderTimeInput).toBeInTheDocument();
+
+        fireEvent.change(orderTimeInput, { target: { value: '2020-05-12T23:50:21.817' } });
+        expect(orderTimeInput).toHaveValue('2020-05-12T23:50:21.817');
     });
 });
