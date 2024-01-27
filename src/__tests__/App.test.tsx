@@ -38,7 +38,7 @@ test.each(deliveryCases)(
         const orderTimeInput = await screen.findByLabelText(/order time/i);
         fireEvent.change(orderTimeInput, { target: { value: dt } });
 
-        act(() => userEvent.click(screen.getByText(/calculate delivery price/i)));
+        act(() => fireEvent.click(screen.getByText(/calculate delivery price/i)));
         const result = await screen.findByTestId('fee');
         expect(result).toHaveTextContent(expected);
     }
