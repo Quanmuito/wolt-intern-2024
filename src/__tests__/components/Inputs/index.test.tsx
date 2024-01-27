@@ -19,16 +19,16 @@ test('Test render InputText', async () => {
 });
 
 test('Test render InputNumber', async () => {
-    render(<InputNumber id="test" options={ { value: 5, 'aria-label': 'Test input', onChange: () => {} } } />);
-    const input = await screen.findByRole('spinbutton ', { name: 'Test input' });
+    render(<InputNumber id="test" options={ { value: 5, onChange: () => {} } } />);
+    const input = await screen.findByRole('spinbutton');
 
     expect(input).toBeInTheDocument();
     expect(input).toHaveValue(5);
 });
 
 test('Test render InputDatetime', async () => {
-    render(<InputDatetime id="test" options={ { value: '2020-05-12T23:50:21.817', 'aria-label': 'Test input', onChange: () => {} } } />);
-    const input = await screen.findByRole('spinbutton ', { name: 'Test input' });
+    render(<InputDatetime id="test" options={ { value: '2020-05-12T23:50:21.817', onChange: () => {} } } />);
+    const input = await screen.findByRole('spinbutton');
 
     expect(input).toBeInTheDocument();
     expect(input).toHaveValue('2020-05-12T23:50:21.817');
