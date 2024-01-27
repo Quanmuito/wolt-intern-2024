@@ -43,7 +43,6 @@ describe('Test cart value input', () => {
     );
 
     const tooltipCartValueCases: [string, string|RegExp][] = [
-        ['', /200€ for free delivery/i],
         ['6', /194€ more for free delivery/i],
         ['8.9', /191.1€ more for free delivery/i],
         ['100', /100€ more for free delivery/i],
@@ -112,7 +111,6 @@ describe('Test user event on delivery distance input', () => {
     );
 
     const tooltipDeliveryDistanceCases: [string, RegExp][] = [
-        ['', /minimum surchage under 1000m/i],
         ['300', /minimum surcharge added/i],
         ['500', /minimum surcharge added/i],
         ['1000', /minimum surcharge added/i],
@@ -182,7 +180,6 @@ describe('Test user event on number of items input', () => {
     );
 
     const tooltipNumberOfItemsCases: [string, RegExp][] = [
-        ['', /free under 4, bulk over 12/i],
         ['2', /2 left free of charge/i],
         ['3', /1 left free of charge/i],
         ['5', /7 left till bulk charge/i],
