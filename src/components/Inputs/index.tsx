@@ -1,4 +1,6 @@
 import React from 'react';
+export * from './InputFeedback';
+export * from './InputLabel';
 
 type InputPropsType = {
     id: string,
@@ -52,6 +54,3 @@ export const InputSubmit = ({ id, options }: InputPropsType) => {
         <input id={ id } type="submit" aria-label="submit" { ...options } />
     );
 };
-
-export * from './InputFeedback';
-export * from './InputLabel';

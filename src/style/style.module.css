@@ -49,6 +49,12 @@
     padding-top: 2rem;
 }
 
+.buttonGroup {
+    width: 100%;
+    border: none;
+    padding: 1rem 5rem;
+}
+
 .input {
     width: 100%;
     margin: 0.5rem 0;

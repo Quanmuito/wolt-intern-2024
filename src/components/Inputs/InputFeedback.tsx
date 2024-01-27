@@ -1,5 +1,4 @@
 import React from 'react';
-import { isEmptyString } from 'utils';
 
 type InputFeedbackPropsType = {
     id: string,
@@ -9,7 +8,7 @@ type InputFeedbackPropsType = {
 }
 export const InputFeedback = (props: InputFeedbackPropsType) => {
     const { error } = props;
-    return (error === undefined || isEmptyString(error))
+    return (error === undefined || error === '')
         ? <InputFeedbackDescription { ...props } />
         : <InputFeedbackError error={ error } { ...props } />;
 };
