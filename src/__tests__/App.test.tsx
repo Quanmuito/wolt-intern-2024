@@ -36,7 +36,7 @@ test.each(deliveryCases)(
 
         act(() => userEvent.keyboard('{Enter}'));
         const result = await screen.findByTestId('fee');
-        expect(result).toHaveDisplayValue(expected);
+        expect(result).toHaveTextContent(expected);
     }
 );
 
@@ -269,7 +269,7 @@ describe('Test user event on order time input', () => {
         const orderTimeInput = await screen.findByLabelText(/order time/i);
         expect(orderTimeInput).toBeInTheDocument();
 
-        fireEvent.change(orderTimeInput, { target: { value: '2024-01-25T12:30:00.000' } });
+        fireEvent.change(orderTimeInput, { target: { value: '2024-01-25T12:30' } });
         expect(orderTimeInput).toHaveValue('2024-01-25T12:30:00.000');
     });
 
