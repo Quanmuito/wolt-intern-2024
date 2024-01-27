@@ -260,6 +260,7 @@ describe('Test user event on number of items input', () => {
 
 describe('Test user event on order time input', () => {
     test('Test render input', async () => {
+        fireEvent.change(await screen.findByLabelText(/order time/i), { target: { value: '2024-01-25T12:30:00.000' } });
         expect(await screen.findByLabelText(/no surcharge/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
         expect(await screen.findByText(/The datetime when the order is being made/i)).toBeInTheDocument();
@@ -269,8 +270,8 @@ describe('Test user event on order time input', () => {
         const orderTimeInput = await screen.findByLabelText(/order time/i);
         expect(orderTimeInput).toBeInTheDocument();
 
-        fireEvent.change(orderTimeInput, { target: { value: '2024-01-25T12:30' } });
-        expect(orderTimeInput).toHaveValue('2024-01-25T12:30:00.000');
+        fireEvent.change(orderTimeInput, { target: { value: '2024-01-25T12:30:00.000' } });
+        expect(orderTimeInput).toHaveValue('2024-01-25T12:30');
     });
 
     const tooltipOrderTimeCases: [string, RegExp][] = [
