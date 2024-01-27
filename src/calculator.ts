@@ -16,7 +16,7 @@ export const CONFIG: {[index: string]: Config} = {
         SURCHARGE_INTERVAL: 1,
     },
     NUMBER: {
-        INTERVAL: 1,
+        INTERVAL: 0.5,
         FREE: 4,
         BULK: 12,
         BULK_SURCHAGE: 1.2,
