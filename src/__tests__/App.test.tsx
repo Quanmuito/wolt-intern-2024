@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -63,26 +63,24 @@ describe('Test cart value input', () => {
         }
     );
 
-    // const invalidCardValueCases: [string, RegExp][] = [
-    //     ['8.9.1', /invalid input. error: cart value should be a float number./i],
-    //     ['-8', /invalid input. error: cart value should be positive./i],
-    // ];
-    // test.each(invalidCardValueCases)(
-    //     'Input is %p and error should be %p',
-    //     async (input, pattern) => {
-    //         const cartValueInput = await screen.findByLabelText(/cart value/i);
-    //         expect(cartValueInput).toBeInTheDocument();
+    const invalidCartValueCases: [string, RegExp][] = [
+        ['8.9.1', /invalid input. error: cart value should be a float number./i],
+        ['-8', /invalid input. error: cart value should be positive./i],
+    ];
+    test.each(invalidCartValueCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const cartValueInput = await screen.findByLabelText(/cart value/i);
+            expect(cartValueInput).toBeInTheDocument();
 
-    //         act(() => {
-    //             userEvent.clear(cartValueInput);
-    //             userEvent.type(cartValueInput, input);
-    //             userEvent.keyboard('{Enter}');
-    //         });
+            userEvent.clear(cartValueInput);
+            userEvent.type(cartValueInput, input);
+            act(() => userEvent.keyboard('{Enter}'));
 
-    //         const error = await screen.findByText(pattern);
-    //         expect(error).toBeInTheDocument();
-    //     }
-    // );
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Test user event on delivery distance input', () => {
@@ -209,25 +207,23 @@ describe('Test user event on number of items input', () => {
         }
     );
 
-    // const invalidNumberOfItemsCases: [string, RegExp][] = [
-    //     ['-5', /invalid input. Error: number of items should be positive./i],
-    // ];
-    // test.each(invalidNumberOfItemsCases)(
-    //     'Input is %p and error should be %p',
-    //     async (input, pattern) => {
-    //         const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
-    //         expect(numberOfItemsInput).toBeInTheDocument();
+    const invalidNumberOfItemsCases: [string, RegExp][] = [
+        ['-5', /invalid input. Error: number of items should be positive./i],
+    ];
+    test.each(invalidNumberOfItemsCases)(
+        'Input is %p and error should be %p',
+        async (input, pattern) => {
+            const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+            expect(numberOfItemsInput).toBeInTheDocument();
 
-    //         act(() => {
-    //             userEvent.clear(numberOfItemsInput);
-    //             userEvent.type(numberOfItemsInput, input);
-    //             userEvent.keyboard('{Enter}');
-    //         });
+            userEvent.clear(numberOfItemsInput);
+            userEvent.type(numberOfItemsInput, input);
+            act(() => userEvent.keyboard('{Enter}'));
 
-    //         const error = await screen.findByText(pattern);
-    //         expect(error).toBeInTheDocument();
-    //     }
-    // );
+            const error = await screen.findByText(pattern);
+            expect(error).toBeInTheDocument();
+        }
+    );
 });
 
 describe('Test user event on order time input', () => {
