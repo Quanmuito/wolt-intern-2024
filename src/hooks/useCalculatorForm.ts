@@ -57,7 +57,7 @@ export const useCalculatorForm = (): UseCalculatorForm => {
 
     const [fee, setFee] = useState<number>(0);
     const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
-        // await new Promise((resolve) => setTimeout(resolve, 500)); // For loading
+        await new Promise((resolve) => setTimeout(resolve, 500)); // For loading
 
         const empty = data.cartValue === 0 && data.numberOfItems === 0;
         if (!validate(data) || empty) {

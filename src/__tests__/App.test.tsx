@@ -25,15 +25,15 @@ test.each(deliveryCases)(
     async (cv, dd, ni, dt, expected) => {
         const cartValueInput = await screen.findByLabelText(/cart value/i);
         userEvent.clear(cartValueInput);
-        userEvent.type(cartValueInput, cv);
+        fireEvent.change(cartValueInput, { target: { value: cv } });
 
         const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
         userEvent.clear(deliveryDistanceInput);
-        userEvent.type(deliveryDistanceInput, dd);
+        fireEvent.change(deliveryDistanceInput, { target: { value: dd } });
 
         const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
         userEvent.clear(numberOfItemsInput);
-        userEvent.type(numberOfItemsInput, ni);
+        fireEvent.change(numberOfItemsInput, { target: { value: ni } });
 
         const orderTimeInput = await screen.findByLabelText(/order time/i);
         fireEvent.change(orderTimeInput, { target: { value: dt } });
