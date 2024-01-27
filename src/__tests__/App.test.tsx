@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { act, cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -35,9 +35,12 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            userEvent.clear(cartValueInput);
-            userEvent.type(cartValueInput, input);
-            userEvent.keyboard('{Enter}');
+            act(() => {
+                userEvent.clear(cartValueInput);
+                userEvent.type(cartValueInput, input);
+                userEvent.keyboard('{Enter}');
+            });
+
             expect(cartValueInput).toHaveValue(expected);
         }
     );
@@ -55,8 +58,10 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            userEvent.clear(cartValueInput);
-            userEvent.type(cartValueInput, input);
+            act(() => {
+                userEvent.clear(cartValueInput);
+                userEvent.type(cartValueInput, input);
+            });
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
@@ -73,9 +78,12 @@ describe('Test cart value input', () => {
             const cartValueInput = await screen.findByLabelText(/cart value/i);
             expect(cartValueInput).toBeInTheDocument();
 
-            userEvent.clear(cartValueInput);
-            userEvent.type(cartValueInput, input);
-            userEvent.keyboard('{Enter}');
+            act(() => {
+                userEvent.clear(cartValueInput);
+                userEvent.type(cartValueInput, input);
+                userEvent.keyboard('{Enter}');
+            });
+
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
@@ -104,8 +112,11 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            userEvent.clear(deliveryDistanceInput);
-            userEvent.type(deliveryDistanceInput, input);
+            act(() => {
+                userEvent.clear(deliveryDistanceInput);
+                userEvent.type(deliveryDistanceInput, input);
+            });
+
             expect(deliveryDistanceInput).toHaveValue(expected);
         }
     );
@@ -125,8 +136,10 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            userEvent.clear(deliveryDistanceInput);
-            userEvent.type(deliveryDistanceInput, input);
+            act(() => {
+                userEvent.clear(deliveryDistanceInput);
+                userEvent.type(deliveryDistanceInput, input);
+            });
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
@@ -142,9 +155,12 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            userEvent.clear(deliveryDistanceInput);
-            userEvent.type(deliveryDistanceInput, input);
-            userEvent.keyboard('{Enter}');
+            act(() => {
+                userEvent.clear(deliveryDistanceInput);
+                userEvent.type(deliveryDistanceInput, input);
+                userEvent.keyboard('{Enter}');
+            });
+
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
@@ -173,8 +189,11 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            userEvent.clear(numberOfItemsInput);
-            userEvent.type(numberOfItemsInput, input);
+            act(() => {
+                userEvent.clear(numberOfItemsInput);
+                userEvent.type(numberOfItemsInput, input);
+            });
+
             expect(numberOfItemsInput).toHaveValue(expected);
         }
     );
@@ -195,8 +214,10 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            userEvent.clear(numberOfItemsInput);
-            userEvent.type(numberOfItemsInput, input);
+            act(() => {
+                userEvent.clear(numberOfItemsInput);
+                userEvent.type(numberOfItemsInput, input);
+            });
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
@@ -212,9 +233,12 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            userEvent.clear(numberOfItemsInput);
-            userEvent.type(numberOfItemsInput, input);
-            userEvent.keyboard('{Enter}');
+            act(() => {
+                userEvent.clear(numberOfItemsInput);
+                userEvent.type(numberOfItemsInput, input);
+                userEvent.keyboard('{Enter}');
+            });
+
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
         }
