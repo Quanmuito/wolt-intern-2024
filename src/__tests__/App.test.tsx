@@ -19,22 +19,22 @@ const deliveryCases: string[][] = [
 test.each(deliveryCases)(
     'Cart value, delivery distance, number of items, order time is %p, %p, %p, %p respectively and result should be %p',
     async (cv, dd, ni, dt, expected) => {
-        const orderTimeInput = await screen.findByLabelText(/order time/i);
-        fireEvent.change(orderTimeInput, { target: { value: dt } });
-
-        const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
-        userEvent.clear(numberOfItemsInput);
-        userEvent.type(numberOfItemsInput, ni);
+        const cartValueInput = await screen.findByLabelText(/cart value/i);
+        userEvent.clear(cartValueInput);
+        userEvent.type(cartValueInput, cv);
 
         const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
         userEvent.clear(deliveryDistanceInput);
         userEvent.type(deliveryDistanceInput, dd);
 
-        const cartValueInput = await screen.findByLabelText(/cart value/i);
-        userEvent.clear(cartValueInput);
-        userEvent.type(cartValueInput, cv);
+        const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+        userEvent.clear(numberOfItemsInput);
+        userEvent.type(numberOfItemsInput, ni);
 
-        act(() => userEvent.keyboard('{Enter}'));
+        const orderTimeInput = await screen.findByLabelText(/order time/i);
+        fireEvent.change(orderTimeInput, { target: { value: dt } });
+
+        act(() => userEvent.click(screen.getByLabelText(/calculate delivery price/i)));
         const result = await screen.findByTestId('fee');
         expect(result).toHaveTextContent(expected);
     }
