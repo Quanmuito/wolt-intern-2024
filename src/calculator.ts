@@ -37,8 +37,8 @@ export const getCartValueSurcharge = (cartValue: number): number => {
 export const getDeliveryDistanceSurcharge = (deliveryDistance: number): number => {
     const multiplier = Math.ceil(deliveryDistance / CONFIG.DISTANCE.INTERVAL) - 2;
     return (multiplier < 0)
-        ? CONFIG.DISTANCE_SURCHARGE.MIN
-        : CONFIG.DISTANCE_SURCHARGE.MIN + multiplier * CONFIG.DISTANCE_SURCHARGE.INTERVAL;
+        ? CONFIG.DISTANCE.SURCHARGE_MIN
+        : CONFIG.DISTANCE.SURCHARGE_MIN + multiplier * CONFIG.DISTANCE.SURCHARGE_INTERVAL;
 };
 
 export const getNumberOfItemsSurcharge = (numberOfItems: number): number => {
