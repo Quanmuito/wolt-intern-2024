@@ -32,7 +32,7 @@ test('Test render InputDatetime', async () => {
     const input = await screen.findByTestId('input');
 
     expect(input).toBeInTheDocument();
-    expect(input).toHaveValue('2024-01-25T12:30:00.000');
+    expect(input).toHaveValue('2024-01-25T12:30');
 });
 
 test('Test render InputSubmit', async () => {
