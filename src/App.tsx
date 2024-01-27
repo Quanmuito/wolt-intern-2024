@@ -170,7 +170,11 @@ export default function App() {
 
                         <div className={ style.result }>
                             <p className={ style.line }>Total delivery fee (€)</p>
-                            <p className={ style.line } data-test-id="fee">{ fee }</p>
+                            <p
+                                className={ style.line }
+                                data-test-id="fee"
+                                data-testid="fee"
+                            >{ fee }</p>
                         </div>
                     </div>
                 </div>

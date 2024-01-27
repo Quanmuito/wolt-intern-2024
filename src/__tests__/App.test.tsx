@@ -8,6 +8,38 @@ beforeEach(() => {
     render(<App />);
 });
 
+const deliveryCases: string[][] = [
+    ['5', '500', '3', '2024-01-26T12:30', '7.00'],
+    ['10', '500', '3', '2024-01-26T12:30', '2.00'],
+    ['10', '1500', '3', '2024-01-26T12:30', '3.00'],
+    ['10', '1500', '5', '2024-01-26T12:30', '3.50'],
+    ['10', '1500', '13', '2024-01-26T12:30', '8.70'],
+    ['10', '1500', '13', '2024-01-26T18:30', '10.44'],
+];
+test.each(deliveryCases)(
+    'Cart value, delivery distance, number of items, order time is %p, %p, %p, %p respectively and result should be %p',
+    async (cv, dd, ni, dt, expected) => {
+        const orderTimeInput = await screen.findByLabelText(/order time/i);
+        fireEvent.change(orderTimeInput, { target: { value: dt } });
+
+        const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
+        userEvent.clear(numberOfItemsInput);
+        userEvent.type(numberOfItemsInput, ni);
+
+        const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
+        userEvent.clear(deliveryDistanceInput);
+        userEvent.type(deliveryDistanceInput, dd);
+
+        const cartValueInput = await screen.findByLabelText(/cart value/i);
+        userEvent.clear(cartValueInput);
+        userEvent.type(cartValueInput, cv);
+
+        act(() => userEvent.keyboard('{Enter}'));
+        const result = await screen.findByTestId('fee');
+        expect(result).toHaveDisplayValue(expected);
+    }
+);
+
 test('Test render', async () => {
     expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
     expect(await screen.findByText(/calculate delivery price/i)).toBeInTheDocument();
@@ -146,7 +178,7 @@ describe('Test user event on delivery distance input', () => {
 
             userEvent.clear(deliveryDistanceInput);
             userEvent.type(deliveryDistanceInput, input);
-            userEvent.keyboard('{Enter}');
+            act(() => userEvent.keyboard('{Enter}'));
 
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
@@ -228,6 +260,7 @@ describe('Test user event on number of items input', () => {
 
 describe('Test user event on order time input', () => {
     test('Test render input', async () => {
+        expect(await screen.findByLabelText(/no surcharge/i)).toBeInTheDocument();
         expect(await screen.findByLabelText(/order time/i)).toBeInTheDocument();
         expect(await screen.findByText(/The datetime when the order is being made/i)).toBeInTheDocument();
     });
@@ -236,7 +269,31 @@ describe('Test user event on order time input', () => {
         const orderTimeInput = await screen.findByLabelText(/order time/i);
         expect(orderTimeInput).toBeInTheDocument();
 
-        fireEvent.change(orderTimeInput, { target: { value: '2020-05-12T23:50:21.817' } });
-        expect(orderTimeInput).toHaveValue('2020-05-12T23:50:21.817');
+        fireEvent.change(orderTimeInput, { target: { value: '2024-01-25T12:30:00.000' } });
+        expect(orderTimeInput).toHaveValue('2024-01-25T12:30:00.000');
     });
+
+    const tooltipOrderTimeCases: [string, RegExp][] = [
+        ['2024-01-25T12:30', /no surcharge/i], // not Fri, not rush hour
+        ['2024-01-25T15:30', /no surcharge/i], // not Fri, rush hour
+        ['2024-01-26T12:30', /no surcharge/i], // Fri, before rush hour
+        ['2024-01-26T15:30', /rush hour selected!/i],
+        ['2024-01-26T16:30', /rush hour selected!/i],
+        ['2024-01-26T17:30', /rush hour selected!/i],
+        ['2024-01-26T18:30', /rush hour selected!/i],
+        ['2024-01-26T19:30', /no surcharge/i], // Fri, after rush hour
+        ['2024-01-26T20:30', /no surcharge/i], // Fri, after rush hour
+    ];
+    test.each(tooltipOrderTimeCases)(
+        'Value is %p and tooltip should be %p',
+        async (value, expected) => {
+            const orderTimeInput = await screen.findByLabelText(/order time/i);
+            expect(orderTimeInput).toBeInTheDocument();
+
+            fireEvent.change(orderTimeInput, { target: { value: value } });
+
+            const tooltip = await screen.findByText(expected);
+            expect(tooltip).toBeInTheDocument();
+        }
+    );
 });

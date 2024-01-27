@@ -28,11 +28,11 @@ test('Test render InputNumber', async () => {
 });
 
 test('Test render InputDatetime', async () => {
-    render(<InputDatetime id="test" options={ { value: '2020-05-12T23:50:21.817', 'data-testid': 'input', onChange: () => {} } } />);
+    render(<InputDatetime id="test" options={ { value: '2024-01-25T12:30:00.000', 'data-testid': 'input', onChange: () => {} } } />);
     const input = await screen.findByTestId('input');
 
     expect(input).toBeInTheDocument();
-    expect(input).toHaveValue('2020-05-12T23:50:21.817');
+    expect(input).toHaveValue('2024-01-25T12:30:00.000');
 });
 
 test('Test render InputSubmit', async () => {
