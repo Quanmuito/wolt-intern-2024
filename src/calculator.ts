@@ -23,8 +23,8 @@ export const CONFIG: {[index: string]: Config} = {
     },
     RUSH_HOUR: {
         DAY: 5,
-        HOUR_START: 15,
-        HOUR_END: 19,
+        START: 15,
+        END: 19,
         MULTIPLIER: 1.2,
     },
 };
