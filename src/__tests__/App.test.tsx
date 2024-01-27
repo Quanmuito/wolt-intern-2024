@@ -8,6 +8,10 @@ beforeEach(() => {
     render(<App />);
 });
 
+afterEach(() => {
+    cleanup();
+});
+
 const deliveryCases: string[][] = [
     ['5', '500', '3', '2024-01-26T12:30', '7.00'],
     ['10', '500', '3', '2024-01-26T12:30', '2.00'],
