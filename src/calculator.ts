@@ -19,7 +19,7 @@ export const CONFIG: {[index: string]: Config} = {
         INTERVAL: 0.5,
         FREE: 4,
         BULK: 12,
-        BULK_SURCHAGE: 1.2,
+        BULK_SURCHARGE: 1.2,
     },
     RUSH_HOUR: {
         DAY: 5,
