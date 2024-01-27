@@ -4,9 +4,9 @@ import {
     InputText,
     InputNumber,
     InputDatetime,
+    InputSubmit,
     InputLabel,
-    InputFeedback,
-    InputSubmit
+    InputFeedback
 } from 'components';
 import style from 'style/style.module.css';
 
