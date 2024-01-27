@@ -12,8 +12,8 @@ export const CONFIG: {[index: string]: Config} = {
     DISTANCE: {
         MIN: 1000,
         INTERVAL: 500,
-        SURCHAGE_MIN: 2,
-        SURCHAGE_INTERVAL: 1,
+        SURCHARGE_MIN: 2,
+        SURCHARGE_INTERVAL: 1,
     },
     NUMBER: {
         INTERVAL: 1,
@@ -55,8 +55,8 @@ export const isRushHour = (orderTime: string): boolean => {
     const date = new Date(orderTime);
     // Friday after 3PM and before 7PM
     return date.getDay() === CONFIG.RUSH_HOUR.DAY
-        && date.getHours() >= CONFIG.RUSH_HOURS.START
-        && date.getHours() < CONFIG.RUSH_HOURS.END;
+        && date.getHours() >= CONFIG.RUSH_HOUR.START
+        && date.getHours() < CONFIG.RUSH_HOUR.END;
 };
 
 const getFinalFee = (fee: number): number => (fee < CONFIG.FEE.MAX) ? fee : CONFIG.FEE.MAX;
