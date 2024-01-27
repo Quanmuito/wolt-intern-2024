@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -107,10 +107,8 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(deliveryDistanceInput);
-                userEvent.type(deliveryDistanceInput, input);
-            });
+            userEvent.clear(deliveryDistanceInput);
+            userEvent.type(deliveryDistanceInput, input);
 
             expect(deliveryDistanceInput).toHaveValue(expected);
         }
@@ -131,10 +129,8 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(deliveryDistanceInput);
-                userEvent.type(deliveryDistanceInput, input);
-            });
+            userEvent.clear(deliveryDistanceInput);
+            userEvent.type(deliveryDistanceInput, input);
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
@@ -150,11 +146,9 @@ describe('Test user event on delivery distance input', () => {
             const deliveryDistanceInput = await screen.findByLabelText(/delivery distance/i);
             expect(deliveryDistanceInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(deliveryDistanceInput);
-                userEvent.type(deliveryDistanceInput, input);
-                userEvent.keyboard('{Enter}');
-            });
+            userEvent.clear(deliveryDistanceInput);
+            userEvent.type(deliveryDistanceInput, input);
+            userEvent.keyboard('{Enter}');
 
             const error = await screen.findByText(pattern);
             expect(error).toBeInTheDocument();
@@ -184,10 +178,8 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(numberOfItemsInput);
-                userEvent.type(numberOfItemsInput, input);
-            });
+            userEvent.clear(numberOfItemsInput);
+            userEvent.type(numberOfItemsInput, input);
 
             expect(numberOfItemsInput).toHaveValue(expected);
         }
@@ -209,10 +201,8 @@ describe('Test user event on number of items input', () => {
             const numberOfItemsInput = await screen.findByLabelText(/number of items/i);
             expect(numberOfItemsInput).toBeInTheDocument();
 
-            act(() => {
-                userEvent.clear(numberOfItemsInput);
-                userEvent.type(numberOfItemsInput, input);
-            });
+            userEvent.clear(numberOfItemsInput);
+            userEvent.type(numberOfItemsInput, input);
 
             const tooltip = await screen.findByText(expected);
             expect(tooltip).toBeInTheDocument();
