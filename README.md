@@ -18,5 +18,27 @@ Delivery Fee Calculator is an application used to calculate shipping fees based 
 - On local, you can run in debug mode with VSCode by press `F5` or `Ctrl+Shift+D` and `Start Debugging`.
 - Test built and live version here > [Delivery Fee Calculator](https://quanmuito.github.io/wolt-intern-2024/)
 
+### Test coverage
+
+File                   | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-----------------------|---------|----------|---------|---------|-------------------
+All files              |     100 |      100 |     100 |     100 |
+ src                   |     100 |      100 |     100 |     100 |
+  App.tsx              |     100 |      100 |     100 |     100 |
+  calculator.ts        |     100 |      100 |     100 |     100 |
+  react-app-env.d.ts   |       0 |        0 |       0 |       0 |
+  types.ts             |       0 |        0 |       0 |       0 |
+ src/components        |       0 |        0 |       0 |       0 |
+  index.ts             |       0 |        0 |       0 |       0 |
+ src/components/Inputs |     100 |      100 |     100 |     100 |
+  InputFeedback.tsx    |     100 |      100 |     100 |     100 |
+  InputLabel.tsx       |     100 |      100 |     100 |     100 |
+  index.tsx            |     100 |      100 |     100 |     100 |
+ src/hooks             |     100 |      100 |     100 |     100 |
+  useCalculatorForm.ts |     100 |      100 |     100 |     100 |
+
+Test Suites: 5 total
+Tests:       119 total
+
 ### Source
 - [Wolt - engineering-internship-2024](https://github.com/woltapp/engineering-internship-2024)

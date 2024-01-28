@@ -83,6 +83,13 @@ export const useCalculatorForm = (): UseCalculatorForm => {
     };
 };
 
+const getTooltips = (currentValue: FormValues): {[index: string]: string} => ({
+    cartValue: getTooltipForCartValue(currentValue.cartValue),
+    deliveryDistance: getTooltipForDeliveryDistance(currentValue.deliveryDistance),
+    numberOfItems: getTooltipForNumberOfItems(currentValue.numberOfItems),
+    orderTime: getTooltipForOrderTime(currentValue.orderTime),
+});
+
 const getTooltipForCartValue = (current: number): string => {
     if (!Number.isNaN(current) && current >= 0) {
         const remain = CONFIG.CART_VALUE.MAX - current;
@@ -123,10 +130,3 @@ const getTooltipForNumberOfItems = (current: number): string => {
 const getTooltipForOrderTime = (current: string): string => (
     isRushHour(current) ? 'Rush hour selected!' : 'No surcharge'
 );
-
-const getTooltips = (currentValue: FormValues): {[index: string]: string} => ({
-    cartValue: getTooltipForCartValue(currentValue.cartValue),
-    deliveryDistance: getTooltipForDeliveryDistance(currentValue.deliveryDistance),
-    numberOfItems: getTooltipForNumberOfItems(currentValue.numberOfItems),
-    orderTime: getTooltipForOrderTime(currentValue.orderTime),
-});

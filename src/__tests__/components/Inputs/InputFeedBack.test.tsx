@@ -6,6 +6,10 @@ beforeEach(() => {
     cleanup();
 });
 
+afterEach(() => {
+    cleanup();
+});
+
 test('Test render InputFeedbackDescription', async () => {
     render(<InputFeedbackDescription id="test" description="Test description" options={ {} } />);
     expect(await screen.findByText(/test description/i)).toBeInTheDocument();

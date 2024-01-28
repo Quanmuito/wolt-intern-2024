@@ -12,6 +12,13 @@ afterEach(() => {
     cleanup();
 });
 
+test('Test render display components', async () => {
+    expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
+    expect(await screen.findByText(/calculate delivery price/i)).toBeInTheDocument();
+    expect(await screen.findByText(/total delivery fee/i)).toBeInTheDocument();
+    expect(await screen.findByTestId('fee')).toHaveTextContent('0.00');
+});
+
 const deliveryCases: string[][] = [
     ['5', '500', '3', '2024-01-26T12:30', '7.00'],
     ['10', '500', '3', '2024-01-26T12:30', '2.00'],
@@ -41,15 +48,8 @@ test.each(deliveryCases)(
         await act(async () => fireEvent.click(screen.getByText(/calculate delivery price/i)));
         const result = await screen.findByTestId('fee');
         await waitFor(() => expect(result).toHaveTextContent(expected));
-
     }
 );
-
-test('Test render', async () => {
-    expect(await screen.findByText(/delivery fee calculator/i)).toBeInTheDocument();
-    expect(await screen.findByText(/calculate delivery price/i)).toBeInTheDocument();
-    expect(await screen.findByText(/total delivery fee/i)).toBeInTheDocument();
-});
 
 describe('Test cart value input', () => {
     test('Test render input', async () => {
@@ -115,7 +115,7 @@ describe('Test cart value input', () => {
             act(() => userEvent.keyboard('{Enter}'));
 
             const error = await screen.findByText(pattern);
-            expect(error).toBeInTheDocument();
+            await waitFor(() => expect(error).toBeInTheDocument());
         }
     );
 });
@@ -186,7 +186,7 @@ describe('Test user event on delivery distance input', () => {
             act(() => userEvent.keyboard('{Enter}'));
 
             const error = await screen.findByText(pattern);
-            expect(error).toBeInTheDocument();
+            await waitFor(() => expect(error).toBeInTheDocument());
         }
     );
 });
@@ -258,7 +258,7 @@ describe('Test user event on number of items input', () => {
             act(() => userEvent.keyboard('{Enter}'));
 
             const error = await screen.findByText(pattern);
-            expect(error).toBeInTheDocument();
+            await waitFor(() => expect(error).toBeInTheDocument());
         }
     );
 });

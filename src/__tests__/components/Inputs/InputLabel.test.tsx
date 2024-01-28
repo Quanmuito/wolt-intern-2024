@@ -6,6 +6,10 @@ beforeEach(() => {
     cleanup();
 });
 
+afterEach(() => {
+    cleanup();
+});
+
 test('Test render InputLabel', async () => {
     render(<InputLabel id="test" label="Test label" options={ {} } />);
     expect(await screen.findByText(/test label/i)).toBeInTheDocument();
