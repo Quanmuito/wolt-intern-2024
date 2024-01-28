@@ -39,7 +39,7 @@ test.each(deliveryCases)(
         fireEvent.change(orderTimeInput, { target: { value: dt } });
 
         act(() => fireEvent.click(screen.getByText(/calculate delivery price/i)));
-        const result = await screen.findByTestId('feex');
+        const result = await screen.findByTestId('fee');
         expect(result).toHaveTextContent(expected);
     }
 );
