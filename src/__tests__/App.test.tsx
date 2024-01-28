@@ -40,6 +40,7 @@ test.each(deliveryCases)(
 
         act(() => fireEvent.click(screen.getByText(/calculate delivery price/i)));
         const result = await screen.findByTestId('fee');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         expect(result).toHaveTextContent(expected);
     }
 );
