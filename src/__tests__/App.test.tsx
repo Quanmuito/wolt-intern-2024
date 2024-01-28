@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
+import { act, waitFor, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 
@@ -40,7 +40,8 @@ test.each(deliveryCases)(
 
         await act(async () => fireEvent.click(screen.getByText(/calculate delivery price/i)));
         const result = await screen.findByTestId('fee');
-        expect(result).toHaveTextContent(expected);
+        await waitFor(() => expect(result).toHaveTextContent(expected));
+
     }
 );
 
