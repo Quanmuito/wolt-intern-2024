@@ -41,10 +41,9 @@ test.each(deliveryCases)(
         act(async () => {
             fireEvent.click(screen.getByText(/calculate delivery price/i));
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            return;
+            const result = await screen.findByTestId('fee');
+            expect(result).toHaveTextContent(expected);
         });
-        const result = await screen.findByTestId('fee');
-        expect(result).toHaveTextContent(expected);
     }
 );
 
