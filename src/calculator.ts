@@ -59,7 +59,6 @@ export const isRushHour = (orderTime: string): boolean => {
         && date.getHours() < CONFIG.RUSH_HOUR.END;
 };
 
-const getFinalFee = (fee: number): number => (fee < CONFIG.FEE.MAX) ? fee : CONFIG.FEE.MAX;
 export const getDeliveryFee = (
     cartValue: number,
     deliveryDistance: number,
@@ -77,3 +76,5 @@ export const getDeliveryFee = (
         ? getFinalFee(deliveryFee * CONFIG.RUSH_HOUR.MULTIPLIER)
         : getFinalFee(deliveryFee);
 };
+
+const getFinalFee = (fee: number): number => (fee < CONFIG.FEE.MAX) ? fee : CONFIG.FEE.MAX;

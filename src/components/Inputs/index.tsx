@@ -5,6 +5,7 @@ type InputPropsType = {
     options: {[x: string]: any},
 }
 
+/** Render input with type text */
 export const InputText = ({ id, options }: InputPropsType) => (
     <input
         id={ id }
@@ -17,6 +18,7 @@ export const InputText = ({ id, options }: InputPropsType) => (
     />
 );
 
+/** Render input with type number */
 export const InputNumber = ({ id, options }: InputPropsType) => (
     <input
         id={ id }
@@ -29,6 +31,7 @@ export const InputNumber = ({ id, options }: InputPropsType) => (
     />
 );
 
+/** Render input with type date-time */
 export const InputDatetime = ({ id, options }: InputPropsType) => (
     <input
         id={ id }
@@ -41,10 +44,12 @@ export const InputDatetime = ({ id, options }: InputPropsType) => (
     />
 );
 
+/** Render submit button */
 export const InputSubmit = ({ id, options }: InputPropsType) => (
     <input id={ id } type="submit" aria-label="submit" { ...options } />
 );
 
+/** Render label of the input */
 type InputLabelPropsType = InputPropsType&{
     label: string,
 }
@@ -54,6 +59,7 @@ export const InputLabel = ({ id, label, options }: InputLabelPropsType) => (
     </label>
 );
 
+/** Determine whether description or error */
 type InputFeedbackPropsType = InputPropsType&{
     description: string,
     error?: string,
@@ -65,6 +71,7 @@ export const InputFeedback = (props: InputFeedbackPropsType) => {
         : <InputFeedbackError error={ error } { ...props } />;
 };
 
+/** Render input description */
 type InputFeedbackDescriptionPropsType = InputPropsType&{
     description: string,
 }
@@ -74,6 +81,7 @@ export const InputFeedbackDescription = ({ id, description, options }: InputFeed
     </div>
 );
 
+/** Render input error */
 type InputFeedbackErrorPropsType = InputPropsType&{
     error: string,
 }
