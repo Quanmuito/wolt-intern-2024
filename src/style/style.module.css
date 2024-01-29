@@ -20,7 +20,7 @@
     width: 45rem;
     height: 60rem;
     margin: auto;
-    background: url(https://github.com/Quanmuito/wolt-intern-2024/blob/master/public/bg.png?raw=true) no-repeat center;
+    background: url(https://wolt-2024.s3.eu-north-1.amazonaws.com/bg.png) no-repeat center;
     background-size: cover;
     box-shadow: 0 1.5rem 2rem 0 rgba(0, 0, 0, .24), 0 1.5rem 6.25rem 0 rgba(0, 0, 0, .19);
 }
