@@ -4,7 +4,11 @@ import {
     InputText,
     InputNumber,
     InputDatetime,
-    InputSubmit
+    InputSubmit,
+    InputLabel,
+    InputFeedback,
+    InputFeedbackDescription,
+    InputFeedbackError
 } from 'components/Inputs';
 
 beforeEach(() => {
@@ -45,4 +49,36 @@ test('Test render InputSubmit', async () => {
 
     expect(input).toBeInTheDocument();
     expect(input).toHaveValue('Submit form');
+});
+
+test('Test render InputLabel', async () => {
+    render(<InputLabel id="test" label="Test label" options={ {} } />);
+    expect(await screen.findByText(/test label/i)).toBeInTheDocument();
+});
+
+test('Test render InputFeedbackDescription', async () => {
+    render(<InputFeedbackDescription id="test" description="Test description" options={ {} } />);
+    expect(await screen.findByText(/test description/i)).toBeInTheDocument();
+});
+
+test('Test render InputFeedbackError', async () => {
+    render(<InputFeedbackError id="test" error="Test error message" options={ {} } />);
+    expect(await screen.findByText(/test error message/i)).toBeInTheDocument();
+});
+
+describe('Test render InputFeedback', () => {
+    test('Render InputFeedback with description only', async () => {
+        render(<InputFeedback id="test" description="Test description" options={ {} } />);
+        expect(await screen.findByText(/test description/i)).toBeInTheDocument();
+    });
+
+    test('Render InputFeedback with error only', async () => {
+        render(<InputFeedback id="test" description="" error="Test error message" options={ {} } />);
+        expect(await screen.findByText(/test error message/i)).toBeInTheDocument();
+    });
+
+    test('Render InputFeedback with both description and error', async () => {
+        render(<InputFeedback id="test" description="Test description" error="Test error message" options={ {} } />);
+        expect(await screen.findByText(/test error message/i)).toBeInTheDocument();
+    });
 });

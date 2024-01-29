@@ -1,6 +1,4 @@
 import React from 'react';
-export * from './InputFeedback';
-export * from './InputLabel';
 
 type InputPropsType = {
     id: string,
@@ -45,4 +43,42 @@ export const InputDatetime = ({ id, options }: InputPropsType) => (
 
 export const InputSubmit = ({ id, options }: InputPropsType) => (
     <input id={ id } type="submit" aria-label="submit" { ...options } />
+);
+
+type InputLabelPropsType = InputPropsType&{
+    label: string,
+}
+export const InputLabel = ({ id, label, options }: InputLabelPropsType) => (
+    <label id={ `${id}-label` } htmlFor={ id } { ...options }>
+        { label }
+    </label>
+);
+
+type InputFeedbackPropsType = InputPropsType&{
+    description: string,
+    error?: string,
+}
+export const InputFeedback = (props: InputFeedbackPropsType) => {
+    const { error } = props;
+    return (error === undefined || error === '')
+        ? <InputFeedbackDescription { ...props } />
+        : <InputFeedbackError error={ error } { ...props } />;
+};
+
+type InputFeedbackDescriptionPropsType = InputPropsType&{
+    description: string,
+}
+export const InputFeedbackDescription = ({ id, description, options }: InputFeedbackDescriptionPropsType) => (
+    <div id={ `${id}-feedback` } { ...options }>
+        { description }
+    </div>
+);
+
+type InputFeedbackErrorPropsType = InputPropsType&{
+    error: string,
+}
+export const InputFeedbackError = ({ id, error, options }: InputFeedbackErrorPropsType) => (
+    <div id={ `${id}-feedback` } { ...options }>
+        { `Invalid input. Error: ${error}` }
+    </div>
 );

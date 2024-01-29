@@ -1,4 +1,5 @@
 @value --primary--: #009de0;
+@value --secondary--: #1162ee5e;
 @value --error--: rgb(255, 55, 55);
 @value --border--: rgba(255, 255, 255, .2);
 @value --background--: rgba(40, 57, 101, 0.945);
@@ -84,7 +85,7 @@
 }
 
 .button:disabled {
-    background-color: #1162ee5e;
+    background-color: --secondary--;
 }
 
 .labelGroup {
